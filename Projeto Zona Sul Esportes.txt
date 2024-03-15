@@ -1,0 +1,41 @@
+Adicionar o nome e o identificador dos times nas estatisticas
+Adicionar as estatisticas gerais dos times no UserModel
+
+Projeto Zona Sul Esportes
+
+Dash para Gerenciamento de Campeonatos
+
+Páginas
+
+Login/Registro
+	A princípio o Front está feito e no Schema do banco de dados o usuário tem dois campos que não estão sendo preenchidos no campo de registro que é o tipo e o avatar. O tipo vai ser salvo automaticamente como equipe, todos que se registrarem pela tela normal serão equipes. E o avatar é o link da foto do escudo do clube no cloudinary, que iniciará nulo e depois na aba meu perfil o usuário vai conseguir adicionar a foto que deseja. 
+	A parte de Login é preciso fazer a autenticação e no de registro verificar se as duas senhas são iguais.
+
+Elenco 
+	Falta a criação do Form de adicionar atleta, esse form contará com várias informações tanto como foto de documentos como de atletas, por isso estamos usando a API do cloudinary. Falta estilizar a tabela para buscar os dados do bd. 
+	E depois de atletas salvos será necessário fazer que ao clicar na foto/nome do atleta abra um modal/pop-up com todas as informações do atleta e a possibilidade de gerar a carteirinha de atleta (PDF estilizado).
+	O schema do atleta tem todos os dados pedidos pelo cliente, o numero de inscrição é importante porque 1 atleta pode jogar sub-13 por uma equipe e sub-15 por outra, nesse caso ele teria 2 numeros de inscrição diferente.	
+
+Comissão Tecnica
+	É bem parecido com a tela de elenco, vai ter as mesmas funcionalidades mas sem esse problema de 1 pessoa participar de 2 equipes. Mas podemos fazer igual pra evitar problemas futuros.
+
+Campeonatos
+	Vai aparecer na tela todos os campeonatos disponiveis, com filtro por categoria e o botão inscrever e também ao clicar no nome do campeonato abrir um pop-up ou ir para outra tela com mais informações sobre a competição. (Ainda não imaginei como seria o front mas pensei em algo estilo o globoesporte na parte de tabelas, mas queria ver se achava uma biblioteca que fizesse isso, montasse as telas e gerasse os confrontos)
+
+Calendário
+	Aparecer no calendário os jogos da equipe e a possibilidade do usuario salvar novos eventos.
+
+Tarefas (Súmula)
+	Foi um pedido do cliente trocar a aba de tarefas por súmula acredito que da de manter o estilo kanban separando as categorias, exemplo sub-11, sub-13 e fora dos planos, sei la, uma aba pra quem não ta nas sumulas. E ai exportar essas listas em pdf. To usando os elementos da syncfusion pelo q vi é possível exportar em PDF.
+
+Meu Perfil
+	Tela meu perfil básica podendo alterar informações e a foto.
+
+O sistema terá 3 usuários:
+Técnico da Equipe (Descrito Acima)
+Administrador (Que vai poder criar campeonatos e outras permissões)
+Juiz (Que vai adicionar os dados das partidas, resultado, gols...)
+
+O que eu conversei com ele e tenho um escopo é a parte de elenco e comissão técnica, assim que terminar isso vou pedir pra ele me explicar a parte de campeonato. Mais pra frente posso criar um grupo no zap nós 3 pra ir falando sobre e o cara ir entendendo o que precisa ser feito.
+
+Na parte do elenco na aba dos jogadores também vai ter a opção transferência, por exemplo eu quero mandar um guri da minha escolinha pra tua, daí eu vou solicitar isso e vai ficar pendente e o adm que vai poder liberar ou não essa transferência.
