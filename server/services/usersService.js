@@ -4,6 +4,7 @@ const jwt             = require('jsonwebtoken')
 const { ResponseDTO } = require('../dtos/Response')
 const usersData       = require('../data/usersData')
 
+const ObjectId  = require('mongoose').Types.ObjectId
 const UserModel = require('../models/UserModel')
 
 exports.postUser = async (teamName, email, password, confirmPassword, city, state) => {
@@ -205,7 +206,7 @@ exports.getUserById = async (id) => {
     }
 }
 
-exports.updateUserById = async (id, field, value) => {
+exports.updateUserById = async (id, userIdRequesting, field, value) => {
     try {
         if (!field) {
             return new ResponseDTO('Error', 400, 'Campo que deseja ser atualizado não preenchido.')
@@ -215,10 +216,34 @@ exports.updateUserById = async (id, field, value) => {
             return new ResponseDTO('Error', 400, 'Valor do campo que deseja ser atualizado não preenchido.')
         }
 
-        const user = await usersData.getUserById(id)
+        if (!id) {
+            return new ResponseDTO('Error', 400, 'Identificador do usuário que deseja-se atualizar não preenchido')
+        }
 
+        if (!ObjectId.isValid(id)) {
+            return new ResponseDTO('Error', 400, 'Identificador do usuário que deseja-se atualizar não é válido')
+        }
+
+        const user = await usersData.getUserById(id)
         if (!user) {
-            return new ResponseDTO('Error', 404, 'Usuário não encontrado.')
+            return new ResponseDTO('Error', 404, 'Usuário que deseja-se atualizar não encontrado.')
+        }
+
+        if (!userIdRequesting) {
+            return new ResponseDTO('Error', 400, 'Identificador do usuário que está realizando a requisição não preenchido')
+        }
+
+        if (!ObjectId.isValid(userIdRequesting)) {
+            return new ResponseDTO('Error', 400, 'Identificador do usuário que está realizando a requisição não é válido')
+        }
+
+        const userRequesting = await usersData.getUserById(userIdRequesting)
+        if (!userRequesting) {
+            return new ResponseDTO('Error', 404, 'Usuário que está realizando a requisição não encontrado.')
+        }
+
+        if (field == 'permission' && userRequesting.permission != 'admin') {
+            return new ResponseDTO('Error', 400, 'Usuário não tem permissão para modificar a permissão de outros usuários')
         }
 
         user[field] = value

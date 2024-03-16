@@ -2,7 +2,6 @@ const express         = require('express')
 const usersController = require('../controllers/usersController')
 const router          = express.Router()
 
-
 router.post('/', usersController.postUser)
 // router.post('/admin', usersController.postUserAdmin)
 // router.post('/filter', usersController.getUsersByFilter)

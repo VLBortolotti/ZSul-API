@@ -35,9 +35,9 @@ exports.getUserById = async (req, res, next) => {
 }
 
 exports.updateUserById = async (req, res, next) => {
-    const { id }            = req.params
-    const { field, value }  = req.body
-    const response  = await usersService.updateUserById(id, field, value)
+    const { id } = req.params
+    const { field, value, userIdRequesting } = req.body
+    const response  = await usersService.updateUserById(id, userIdRequesting, field, value)
 
     response.sendResponse(res)
 }
