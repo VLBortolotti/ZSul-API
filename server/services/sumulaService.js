@@ -6,6 +6,7 @@ const sumulaData = require('../data/sumulaData')
 const SumulaModel = require('../models/SumulaModel')
 const ObjectId    = require('mongoose').Types.ObjectId
 const { ResponseDTO } = require('../dtos/Response')
+const { all } = require('../routes/usersRoute')
 
 exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
     try {
@@ -241,39 +242,49 @@ exports.precoSumulaByTeamAndCampeonatoId = async (p1, p2, p3, teamId, campeonato
             return new ResponseDTO('Error', 400, 'Usuário (time) com este identificador não existente')
         }
 
-        const sumulaCountActive = await sumulaData.countAllActiveSumulasByCampeonatoAndUserId(campeonatoId, teamId)
-        if (!sumulaCountActive) {
-            return new ResponseDTO('Error', 404, 'Não foi possível computar a quantidade de atletas ativos na súmula deste time')
-        }
-
-        console.log(`sumulaCountActive: ${sumulaCountActive}`)
-        
-
         const allSumulaCount = await sumulaData.countAllSumulasByCampeonatoAndUserId(campeonatoId, teamId)
         if (!allSumulaCount) {
             return new ResponseDTO('Error', 404, 'Não foi possível computar a quantidade total de atletas na súmula deste time')
         }
 
-        console.log(`allSumulaCount: ${allSumulaCount}`)
+        const calcularValorUm = (allSumulaCount) => {
+            if (allSumulaCount <= 18) {
+                return parseFloat(allSumulaCount)
 
-        const calcularPrecoSumulaExcedente = (sumulaCountActive) => {
-            if (sumulaCountActive > 30) {
-                return parseFloat(sumulaCountActive - 30)
+            } else {
+                return parseFloat(18)
             }
-            return parseFloat(0)
         }
-        const precoSumulaExcedente = calcularPrecoSumulaExcedente(sumulaCountActive)
 
-        console.log(`precoSumulaExcedente: ${precoSumulaExcedente}`)
+        const calcularValorDois = (allSumulaCount) => {
+            if (allSumulaCount > 18 && allSumulaCount <= 30) {
+                return parseFloat(allSumulaCount - 18)
 
-        const precoTotal = (allSumulaCount * parseFloat(p1)) + ( 19 - 30 * parseFloat(p2) ) + 
-        ( precoSumulaExcedente * parseFloat(p3) )
+            } else if (allSumulaCount > 30) {
+                return parseFloat(12)
 
-        console.log(`preco total: ${precoTotal}`)
+            } else if (allSumulaCount <= 18) {
+                return parseFloat(0)
+            }
+        }
 
-        const response = precoTotal
+        const calcularValorTres = (allSumulaCount) => {
+            if (allSumulaCount > 30) {
+                return parseFloat(allSumulaCount - 30)
 
-        return new ResponseDTO('Success', 200, 'ok', response)
+            } else if (allSumulaCount <= 30) {
+                return parseFloat(0)
+            }
+        }
+
+        const valorUm   = calcularValorUm(allSumulaCount)
+        const valorDois = calcularValorDois(allSumulaCount)
+        const valorTres = calcularValorTres(allSumulaCount)
+ 
+        const precoTotal = (valorUm * parseFloat(p1)) + (valorDois*  parseFloat(p2)) + 
+        (valorTres * parseFloat(p3))
+
+        return new ResponseDTO('Success', 200, 'ok', precoTotal)
 
     } catch (error) {
         console.log(`Erro: ${error}`)

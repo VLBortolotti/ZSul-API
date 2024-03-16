@@ -5,7 +5,10 @@ const upload  = require("../config/multer")
 
 router.post('/', campoController.postCampo)
 
-router.get('/cidade', campoController.getCampoByCidade)
+router.patch('/cidade', campoController.getCampoByCidade)
+router.patch('/nome', campoController.getCampoByNome)
+router.patch('/endereco', campoController.getCampoByEndereco)
+
 router.get('/', campoController.getAllCampos)
 router.get('/:id', campoController.getCampoById)
 
