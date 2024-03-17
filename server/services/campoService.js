@@ -1,12 +1,18 @@
 const secret          = process.env.SECRET
 const { ResponseDTO } = require('../dtos/Response')
 const ObjectId        = require('mongoose').Types.ObjectId
-const campoData = require('../data/campoData')
+const campoData  = require('../data/campoData')
+const CampoModel = require('../models/CampoModel')
 
 exports.postCampo = async (nome, cidade, endereco, linkMaps) => {
     try {
         if (!nome) {
             return new ResponseDTO('Error', 400, 'Nome do campo não preenchido')
+        }
+
+        const campoByName = await campoData.getCampoByNome(nome)
+        if (campoByName.length > 0) {
+            return new ResponseDTO('Error', 400, 'Campo com este nome já cadastrado')
         }
 
         if (!cidade) {
@@ -115,10 +121,74 @@ exports.getCampoById = async (id) => {
 }
 
 exports.updateCampoById = async (id, field, value) => {
-    try {
+    try {   
+        if (!id) {
+            return new ResponseDTO('Error', 400, 'Identificador do campo não foi preenchido')
+        }
+
+        if (!ObjectId.isValid(id)) {
+            return new ResponseDTO('Error', 400, 'Identificador do campo não é válido')
+        }
+
+        const campo = await campoData.getCampoById(id)
+        if (!campo) {
+            return new ResponseDTO('Error', 404, 'Campo com este identificador não encontrado')
+        }
+
+        if (!field) {
+            return new ResponseDTO('Error', 400, 'Campo que deseja-se atualizar não preenchido')
+        }
+
+        if (!value) {
+            return new ResponseDTO('Error', 400, 'Valor do campo que deseja-se atualizar não preenchido')
+        }
+
+        campo[field] = value
+        campo.save()
+
+        const response = await campoData.getCampoById(id) 
+
+        return new ResponseDTO('Success', 200, 'ok', response)
 
     } catch (error) {
         console.log(`Erro: ${error}`)
         return new ResponseDTO('Error', 500, 'Erro no servidor')
     }
 }
+
+exports.deleteCampoById = async (id) => {
+    try {
+        if (!id) {
+            return new ResponseDTO('Error', 400, 'Identificador do campo não foi preenchido')
+        }
+
+        if (!ObjectId.isValid(id)) {
+            return new ResponseDTO('Error', 400, 'Identificador do campo não é válido')
+        }
+
+        const campo = await campoData.getCampoById(id)
+        if (!campo) {
+            return new ResponseDTO('Error', 404, 'Campo com este identificador não encontrado')
+        }
+
+        const response = await campoData.deleteCampoById(id)
+
+        return new ResponseDTO('Success', 200, 'ok', response)
+
+    } catch (error) {
+        console.log(`Erro: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
+    }
+}
+
+exports.cleanDatabase = async () => {
+    try {
+        const response = await campoData.cleanDatabase()
+
+        return new ResponseDTO('Success', 200, 'ok', response)
+
+    } catch (error) {
+        console.log(`Erro: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
+    }
+} 

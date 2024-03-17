@@ -25,3 +25,11 @@ exports.getCampoByEndereco = async (endereco) => {
 exports.getCampoById = async (id) => {
     return await Campo.findOne({ _id: id }, '-__v')
 }
+
+exports.deleteCampoById = async (id) => {
+    return await Campo.deleteOne({ _id: id })
+}
+
+exports.cleanDatabase = async () => {
+    return await Campo.deleteMany({ })
+}
