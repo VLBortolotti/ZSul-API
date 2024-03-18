@@ -3,6 +3,7 @@ const grupoTimeData  = require('../data/grupoTimeData')
 const usersData = require('../data/usersData')
 const grupoData = require('../data/grupoData')
 
+const CampeonatoModel = require('../models/CampeonatoModel')
 const { ResponseDTO } = require('../dtos/Response')
 const ObjectId        = require('mongoose').Types.ObjectId
 
@@ -29,6 +30,9 @@ exports.postGrupo = async (name, campeonatoId) => {
         if (Object.keys(grupoNameExists).length > 0) {
             return new ResponseDTO('Error', 400, 'Este nome já foi pego neste campeonato')
         }
+
+        campeonato['quantidadeGrupos'] = parseFloat(campeonato['quantidadeGrupos']) + parseFloat(1)
+        await campeonato.save()
 
         const response = await grupoData.postGrupo(name, campeonatoId)
 
