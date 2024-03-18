@@ -3,8 +3,9 @@ const { ResponseDTO } = require('../dtos/Response')
 const ObjectId        = require('mongoose').Types.ObjectId
 const campoData  = require('../data/campoData')
 const CampoModel = require('../models/CampoModel')
+const fs = require("fs")
 
-exports.postCampo = async (nome, cidade, endereco, linkMaps) => {
+exports.postCampo = async (nome, cidade, endereco, linkMaps, image) => {
     try {
         if (!nome) {
             return new ResponseDTO('Error', 400, 'Nome do campo não preenchido')
@@ -27,9 +28,20 @@ exports.postCampo = async (nome, cidade, endereco, linkMaps) => {
             return new ResponseDTO('Error', 400, 'Link para o google maps não preenchido')
         }
 
-        const response = await campoData.postCampo(nome, cidade, endereco, linkMaps)
+        if (image) {
+            const data = fs.readFileSync(image.path)
+            const pictureBase64 = `data:image/png;base64,${data.toString('base64')}`
+            const pictureName   = `${image.filename}`
 
-        return new ResponseDTO('Error', 400, 'ok', response)
+            const response = await campoData.postCampo(nome, cidade, endereco, linkMaps, pictureName, pictureBase64)
+
+            return new ResponseDTO('Error', 200, 'ok', response)
+
+        } else {
+            const response = await campoData.postCampo(nome, cidade, endereco, linkMaps)
+
+            return new ResponseDTO('Error', 200, 'ok', response)
+        }    
 
     } catch (error) {
         console.log(`Erro: ${error}`)
