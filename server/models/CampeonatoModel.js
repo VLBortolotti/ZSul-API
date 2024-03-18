@@ -12,15 +12,16 @@ const campeonatoSchema = mongoose.Schema(
             required: true
         }, 
         participantes: { // colocar apenas o numero de participantes
-            type: String,
-            required: false
+            type: Number,
+            required: false,
+            default: 0
         },
         vagas: {
-            type: String,
+            type: Number,
             required: true
         },
         quantidadeGrupos: {
-            type: String,
+            type: Number,
             required: true
         },
         dataInicio: {

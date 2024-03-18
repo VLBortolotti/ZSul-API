@@ -4,6 +4,8 @@ const campeonatoData  = require('../data/campeonatoData')
 const ObjectId        = require('mongoose').Types.ObjectId;
 const { ResponseDTO } = require('../dtos/Response')
 
+const CampeonatoModel = require('../models/CampeonatoModel')
+
 exports.postInscricao = async (userId, campeonatoId) => {
     try {
         if (!userId) {
@@ -36,8 +38,16 @@ exports.postInscricao = async (userId, campeonatoId) => {
             return new ResponseDTO('Error', 400, 'Usuário já inscrito neste campeonato')
         }
 
+        if (campeonato.vagas <= 0) {
+            return new ResponseDTO('Error', 400, 'Este campeonato já não possui mais vagas')
+        }
+
         const userName = user.teamName
         const campeonatoName = campeonato.name
+        
+        campeonato['vagas'] = parseFloat(campeonato['vagas']) - parseFloat(1)
+        campeonato['participantes'] = parseFloat(campeonato['participantes']) + parseFloat(1)
+        await campeonato.save()
 
         const response = await inscricoesData.postInscricao(userId, userName, campeonatoId, campeonatoName)
         
