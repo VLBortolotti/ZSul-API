@@ -1,9 +1,9 @@
 const jogosService = require('../services/jogosService')
 
 exports.postJogo = async (req, res, next) => {
-    const { campeonatoId, userIdCasa, userIdFora, grupoId, tipo, data, hora, local } = req.body
+    const { campeonatoId, userIdCasa, userIdFora, grupoId, tipo, data, hora, campoId } = req.body
 
-    const response = await jogosService.postJogo(campeonatoId, userIdCasa, userIdFora, grupoId, tipo, data, hora, local)
+    const response = await jogosService.postJogo(campeonatoId, userIdCasa, userIdFora, grupoId, tipo, data, hora, campoId)
 
     response.sendResponse(res)
 }

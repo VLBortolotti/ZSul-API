@@ -1,7 +1,7 @@
 const Jogo = require('../models/JogoModel')
 
-exports.postJogo = async (campeonatoId, campeonatoName, userIdCasa, userCasaName, userIdFora, userForaName, grupoId, tipo, data, hora, local) => {
-    const jogo = new Jogo({ campeonatoId, campeonatoName, userIdCasa, userCasaName, userIdFora, userForaName, grupoId, tipo, data, hora, local })
+exports.postJogo = async (campeonatoId, campeonatoName, userIdCasa, userCasaName, userIdFora, userForaName, grupoId, tipo, data, hora, campoId) => {
+    const jogo = new Jogo({ campeonatoId, campeonatoName, userIdCasa, userCasaName, userIdFora, userForaName, grupoId, tipo, data, hora, campoId })
 
     return jogo.save()
 }

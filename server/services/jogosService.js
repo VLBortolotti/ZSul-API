@@ -2,12 +2,13 @@ const campeonatoData = require('../data/campeonatoData')
 const jogosData = require('../data/jogosData')
 const usersData = require('../data/usersData')
 const grupoData = require('../data/grupoData')
+const campoData = require('../data/campoData')
 
 const JogoModel = require('../models/JogoModel')
 const ObjectId  = require('mongoose').Types.ObjectId
 const { ResponseDTO } = require('../dtos/Response')
 
-exports.postJogo = async (campeonatoId, userIdCasa, userIdFora, grupoId, tipo, data, hora, local) => {
+exports.postJogo = async (campeonatoId, userIdCasa, userIdFora, grupoId, tipo, data, hora, campoId) => {
     try {
         if (!campeonatoId) {
             return new ResponseDTO('Error', 400, 'Identificador do campeonato não preenchida')
@@ -57,8 +58,8 @@ exports.postJogo = async (campeonatoId, userIdCasa, userIdFora, grupoId, tipo, d
         }
 
         const grupo = await grupoData.getGrupoById(grupoId)
-        if (!grupo) {
-            return new ResponseDTO('Error', 400, 'Grupo com este identificador não existente')
+        if (Object.keys(grupo).length == 0) {
+            return new ResponseDTO('Error', 400, 'Grupo com este identificador não existentes')
         }
 
         if (!tipo) {
@@ -73,8 +74,17 @@ exports.postJogo = async (campeonatoId, userIdCasa, userIdFora, grupoId, tipo, d
             return new ResponseDTO('Error', 400, 'Hora não preenchida')
         }
 
-        if (!local) {
-            return new ResponseDTO('Error', 400, 'Local não preenchida')
+        if (!campoId) {
+            return new ResponseDTO('Error', 400, 'Identificador do campo não preenchido')
+        }
+
+        if (!ObjectId.isValid(campoId)) {
+            return new ResponseDTO('Error', 400, 'Identificador do campo não é válido')
+        }
+
+        const campo = await campoData.getCampoById(campoId)
+        if (!campo) {
+            return new ResponseDTO('Error', 400, 'Campo com este identificador não existente')
         }
 
         const campeonatoName = campeonato.name
@@ -92,7 +102,7 @@ exports.postJogo = async (campeonatoId, userIdCasa, userIdFora, grupoId, tipo, d
             return new ResponseDTO('Error', 404, 'O nome do time de fora não foi encontrado')
         }
 
-        const response = await jogosData.postJogo(campeonatoId, campeonatoName, userIdCasa, userCasaName, userIdFora, userForaName, grupoId, tipo, data, hora, local)
+        const response = await jogosData.postJogo(campeonatoId, campeonatoName, userIdCasa, userCasaName, userIdFora, userForaName, grupoId, tipo, data, hora, campoId)
 
         return new ResponseDTO('Success', 200, 'ok', response)
 
@@ -124,9 +134,15 @@ exports.getJogoById = async (id) => {
             return new ResponseDTO('Error', 400, 'Identificador do jogo não é válido')
         }
 
-        const response = await jogosData.getJogoById(id)
+        const jogo = await jogosData.getJogoById(id)
+        if (!jogo) {
+            return new ResponseDTO('Error', 404, 'Jogo com este identificador não encontrado')
+        }
 
-        return new ResponseDTO('Success', 200, 'ok', response)
+        const campoId = jogo.campoId
+        const campo   = await campoData.getCampoById(campoId)
+
+        return new ResponseDTO('Success', 200, 'ok', [jogo, campo])
 
     } catch (error) {
         console.log(`Erro: ${error}`)

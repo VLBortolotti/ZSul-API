@@ -39,8 +39,8 @@ const jogoSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        local: {
-            type: String,
+        campoId: {
+            type: mongoose.Types.ObjectId,
             required: true
         },
         hora: {
