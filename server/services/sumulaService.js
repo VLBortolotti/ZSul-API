@@ -6,7 +6,6 @@ const sumulaData = require('../data/sumulaData')
 const SumulaModel = require('../models/SumulaModel')
 const ObjectId    = require('mongoose').Types.ObjectId
 const { ResponseDTO } = require('../dtos/Response')
-const { all } = require('../routes/usersRoute')
 
 exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
     try {
@@ -66,14 +65,16 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         const userName   = user.teamName
 
         if (status == "ativo") {
-            const sumulaCount = await sumulaData.countAllActiveSumulasByCampeonatoAndUserId(campeonatoId, userId)
+            const sumulaActiveCount = await sumulaData.countAllActiveSumulasByCampeonatoAndUserId(campeonatoId, userId)
         
-            if (isNaN(sumulaCount)) {
+            if (isNaN(sumulaActiveCount)) {
                 return new ResponseDTO('Error', 500, 'Não foi possível contar a quantidade de atletas na súmula')
             }
 
-            if (sumulaCount >= 30) {
-                return new ResponseDTO('Error', 400, 'A súmula de atletas ativos já atingiu o limite máximo (30)')
+            if (sumulaActiveCount >= 30) {
+                const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, 'banco')
+
+                return new ResponseDTO('Success', 200, 'ok', response)
             }
 
             const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, status)
