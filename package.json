@@ -4,6 +4,7 @@
   "description": "Projeto de API Zona Sul Esportes",
   "main": "server.js",
   "scripts": {
+    "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,9 +14,9 @@
   "author": "Davi Duarte && Vítor Laco",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/DuarteDavi/APIsport/issues"
+    "url": "https://github.com/VLBortolotti/ZSul-API/issues"
   },
-  "homepage": "https://github.com/DuarteDavi/APIsport#readme",
+  "homepage": "https://github.com/VLBortolotti/ZSul-API#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
