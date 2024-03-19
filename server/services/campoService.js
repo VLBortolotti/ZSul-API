@@ -3,7 +3,9 @@ const { ResponseDTO } = require('../dtos/Response')
 const ObjectId        = require('mongoose').Types.ObjectId
 const campoData  = require('../data/campoData')
 const CampoModel = require('../models/CampoModel')
-const fs = require("fs")
+
+const path = require('path');
+const fs   = require("fs")
 
 exports.postCampo = async (nome, cidade, endereco, linkMaps, image) => {
     try {
@@ -27,15 +29,28 @@ exports.postCampo = async (nome, cidade, endereco, linkMaps, image) => {
         if (!linkMaps) {
             return new ResponseDTO('Error', 400, 'Link para o google maps não preenchido')
         }
-
+        
         if (image) {
-            const data = fs.readFileSync(image.path)
-            const pictureBase64 = `data:image/png;base64,${data.toString('base64')}`
-            const pictureName   = `${image.filename}`
+            const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp']
 
-            const response = await campoData.postCampo(nome, cidade, endereco, linkMaps, pictureName, pictureBase64)
+            function isExtensionAllowed(extension) {
+                return allowedExtensions.includes(extension);
+            }
 
-            return new ResponseDTO('Error', 200, 'ok', response)
+            const imageExtension = path.extname(image.path)
+
+            if (isExtensionAllowed(imageExtension)) {
+                const data = fs.readFileSync(image.path)
+                const pictureBase64 = `data:image/png;base64,${data.toString('base64')}`
+                const pictureName   = `${image.filename}`
+    
+                const response = await campoData.postCampo(nome, cidade, endereco, linkMaps, pictureName, pictureBase64)
+    
+                return new ResponseDTO('Error', 200, 'ok', response)
+
+            } else {
+                return new ResponseDTO('Error', 400, `Extensão da imagem não permitida (${imageExtension})`)
+            }
 
         } else {
             const response = await campoData.postCampo(nome, cidade, endereco, linkMaps)
@@ -156,7 +171,7 @@ exports.updateCampoById = async (id, field, value) => {
         }
 
         campo[field] = value
-        campo.save()
+        await campo.save()
 
         const response = await campoData.getCampoById(id) 
 
