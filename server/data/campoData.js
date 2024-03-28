@@ -1,7 +1,7 @@
 const Campo = require('../models/CampoModel')
 
-exports.postCampo = async (nome, cidade, endereco, linkMaps, fotoStaff, fotoCampoBase64) => {
-    const campo = new Campo({ nome, cidade, endereco, linkMaps, fotoStaff, fotoCampoBase64 })
+exports.postCampo = async (nome, cidade, endereco, linkMaps, fileName, fileType, fileBase64) => {
+    const campo = new Campo({ nome, cidade, endereco, linkMaps, fileName, fileType, fileBase64 })
 
     return await campo.save()
 }

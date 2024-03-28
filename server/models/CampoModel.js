@@ -19,14 +19,18 @@ const campoSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        fotoCampo: {
+        fileName: {
             type: String, // Buffer
             default: null
         },
-        fotoCampoBase64: {
+        fileType: {
             type: String,
             default: null
         },
+        fileBase64: {
+            type: String,
+            default: null
+        }
     }
 );
 

@@ -30,8 +30,15 @@ exports.postCampo = async (nome, cidade, endereco, linkMaps, fileName, fileType,
             return new ResponseDTO('Error', 400, 'Link para o google maps não preenchido')
         }
         
-        console.log(`fileName: ${fileName}\nfileType: ${fileType}\nfileBase64: ${fileBase64}`)
-        return new ResponseDTO('Success', 200, 'ok', [fileType, fileName, fileBase64])
+        if (!fileName && !fileType && !fileBase64) {
+            const response = await campoData.postCampo(nome, cidade, endereco, linkMaps)
+
+            return new ResponseDTO('Success', 200, 'ok', response)
+        }
+
+        const response = await campoData.postCampo(nome, cidade, endereco, linkMaps, fileName, fileType, fileBase64)
+
+        return new ResponseDTO('Success', 200, 'ok', response)
         
         // if (image) {
         //     const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp']
