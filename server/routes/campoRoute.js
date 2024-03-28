@@ -3,7 +3,7 @@ const campoController  = require('../controllers/campoController')
 const router           = express.Router()
 const upload  = require("../config/multer")
 
-router.post('/', upload.single("file"), campoController.postCampo)
+router.post('/', campoController.postCampo)
 
 router.patch('/cidade', campoController.getCampoByCidade)
 router.patch('/nome', campoController.getCampoByNome)

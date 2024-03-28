@@ -7,7 +7,7 @@ const CampoModel = require('../models/CampoModel')
 const path = require('path');
 const fs   = require("fs")
 
-exports.postCampo = async (nome, cidade, endereco, linkMaps, image) => {
+exports.postCampo = async (nome, cidade, endereco, linkMaps, fileName, fileType, fileBase64) => {
     try {
         if (!nome) {
             return new ResponseDTO('Error', 400, 'Nome do campo não preenchido')
@@ -29,34 +29,36 @@ exports.postCampo = async (nome, cidade, endereco, linkMaps, image) => {
         if (!linkMaps) {
             return new ResponseDTO('Error', 400, 'Link para o google maps não preenchido')
         }
+
+        console.log(`fileName: ${fileName}\nfileType: ${fileType}\nfileBase64: ${fileBase64}`)
         
-        if (image) {
-            const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp']
+        // if (image) {
+        //     const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp']
 
-            function isExtensionAllowed(extension) {
-                return allowedExtensions.includes(extension);
-            }
+        //     function isExtensionAllowed(extension) {
+        //         return allowedExtensions.includes(extension);
+        //     }
 
-            const imageExtension = path.extname(image.path)
+        //     const imageExtension = path.extname(image.path)
 
-            if (isExtensionAllowed(imageExtension)) {
-                const data = fs.readFileSync(image.path)
-                const pictureBase64 = `data:image/png;base64,${data.toString('base64')}`
-                const pictureName   = `${image.filename}`
+        //     if (isExtensionAllowed(imageExtension)) {
+        //         const data = fs.readFileSync(image.path)
+        //         const pictureBase64 = `data:image/png;base64,${data.toString('base64')}`
+        //         const pictureName   = `${image.filename}`
     
-                const response = await campoData.postCampo(nome, cidade, endereco, linkMaps, pictureName, pictureBase64)
+        //         const response = await campoData.postCampo(nome, cidade, endereco, linkMaps, pictureName, pictureBase64)
     
-                return new ResponseDTO('Error', 200, 'ok', response)
+        //         return new ResponseDTO('Error', 200, 'ok', response)
 
-            } else {
-                return new ResponseDTO('Error', 400, `Extensão da imagem não permitida (${imageExtension})`)
-            }
+        //     } else {
+        //         return new ResponseDTO('Error', 400, `Extensão da imagem não permitida (${imageExtension})`)
+        //     }
 
-        } else {
-            const response = await campoData.postCampo(nome, cidade, endereco, linkMaps)
+        // } else {
+        //     const response = await campoData.postCampo(nome, cidade, endereco, linkMaps)
 
-            return new ResponseDTO('Error', 200, 'ok', response)
-        }    
+        //     return new ResponseDTO('Error', 200, 'ok', response)
+        // }    
 
     } catch (error) {
         console.log(`Erro: ${error}`)

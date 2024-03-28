@@ -1,10 +1,9 @@
 const campoService = require('../services/campoService')
 
 exports.postCampo = async (req, res, next) => {
-    const { nome, cidade, endereco, linkMaps } = req.body
-    const image = req.file
+    const { nome, cidade, endereco, linkMaps, fileName, fileType, fileBase64 } = req.body
 
-    const response = await campoService.postCampo(nome, cidade, endereco, linkMaps, image)
+    const response = await campoService.postCampo(nome, cidade, endereco, linkMaps, fileName, fileType, fileBase64)
 
     response.sendResponse(res)
 }
