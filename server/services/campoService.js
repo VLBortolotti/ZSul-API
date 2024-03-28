@@ -31,7 +31,7 @@ exports.postCampo = async (nome, cidade, endereco, linkMaps, fileName, fileType,
         }
         
         if (fileBase64) {
-            const correctBase64 = `data:image/${fileType};base64,/` + fileBase64
+            const correctBase64 = `data:image/${fileType};base64,` + fileBase64
         
             const response = await campoData.postCampo(nome, cidade, endereco, linkMaps, fileName, fileType, correctBase64)
             
