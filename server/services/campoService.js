@@ -9,7 +9,6 @@ const fs   = require("fs")
 
 exports.postCampo = async (nome, cidade, endereco, linkMaps, fileName, fileType, fileBase64) => {
     try {
-        console.log(nome, cidade, endereco, linkMaps, fileName, fileType, fileBase64)
         if (!nome) {
             return new ResponseDTO('Error', 400, 'Nome do campo não preenchido')
         }
