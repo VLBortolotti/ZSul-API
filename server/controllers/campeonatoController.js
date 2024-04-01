@@ -1,9 +1,9 @@
 const campeonatoService = require('../services/campeonatoService')
 
 exports.postCampeonato = async (req, res, next) => {
-    const { name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, tipoGrupo, tipoMataMata, file, fileType } = req.body
+    const { name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, file, fileType } = req.body
 
-    const response = await campeonatoService.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, tipoGrupo, tipoMataMata, file, fileType)
+    const response = await campeonatoService.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, file, fileType)
     response.sendResponse(res)
 }
 

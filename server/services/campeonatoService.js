@@ -6,7 +6,7 @@ const ObjectId        = require('mongoose').Types.ObjectId;
 const campeonatoData  = require('../data/campeonatoData')
 const fs = require('fs')
 
-exports.postCampeonato = async (name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, tipoGrupo, tipoMataMata, file, fileType) => {
+exports.postCampeonato = async (name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, file, fileType) => {
     try {
         if (!name) {
             return new ResponseDTO('Error', 400, 'Nome não preenchido')
@@ -44,23 +44,15 @@ exports.postCampeonato = async (name, categoria, participantes, vagas, quantidad
             return new ResponseDTO('Error', 400, 'Tipo competição não preenchido')
         }
 
-        if (!tipoGrupo) {
-            return new ResponseDTO('Error', 400, 'Tipo grupo não preenchido')
-        }
-
-        if (!tipoMataMata) {
-            return new ResponseDTO('Error', 400, 'Tipo mata-mata não preenchido')
-        }
-
         if (file && fileType) {
             const pictureBase64 = `data:image/${fileType};base64,` + file
         
-            const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, tipoGrupo, tipoMataMata, pictureBase64)
+            const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, pictureBase64)
             
             return new ResponseDTO('Success', 200, 'ok', response)
 
         } else {
-            const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, tipoGrupo, tipoMataMata)
+            const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao)
             
             return new ResponseDTO('Success', 200, 'ok', response)
         }

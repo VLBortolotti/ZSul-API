@@ -36,14 +36,14 @@ const campeonatoSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        tipoGrupo: {
-            type: String,
-            required: true
-        },
-        tipoMataMata: {
-            type: String, 
-            required: true
-        },
+        // tipoGrupo: {
+        //     type: String,
+        //     required: true
+        // },
+        // tipoMataMata: {
+        //     type: String, 
+        //     required: true
+        // },
         // pictureName: {  
         //     type: String, 
         //     default: null

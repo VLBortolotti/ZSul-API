@@ -1,7 +1,7 @@
 const Campeonato = require('../models/CampeonatoModel')
 
-exports.postCampeonato = async (name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, tipoGrupo, tipoMataMata, pictureBase64) => {
-    const campeonato = new Campeonato({ name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, tipoGrupo, tipoMataMata, pictureBase64 })
+exports.postCampeonato = async (name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, pictureBase64) => {
+    const campeonato = new Campeonato({ name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, pictureBase64 })
 
     return await campeonato.save()
 }
