@@ -6,6 +6,7 @@ const usersData       = require('../data/usersData')
 const staffData       = require('../data/staffData')
 const elencoData      = require('../data/elencoData')
 const imageData       = require('../data/imageData')
+const campeonatoData  = require('../data/campeonatoData')
 
 exports.postImage = async (userId, userType, imageField, file, fileType) => {
     try {
@@ -100,6 +101,29 @@ exports.postImage = async (userId, userType, imageField, file, fileType) => {
             await user.save()
         
             const response = await staffData.getStaffById(userId)
+
+            return new ResponseDTO('Success', 200, 'ok', response)
+        }
+
+        if (userType === 'campeonato') {
+            const campeonato = await campeonatoData.getCampeonatoById(userId)
+
+            if (!campeonato) {
+                return new ResponseDTO('Error', 404, 'Campeonato com este identificador não existente')
+            }
+
+            // const data = fs.readFileSync(image.path)
+            // const dataUrl = `data:image/png;base64,${data.toString('base64')}`
+
+            // user[imageField]     = imagePath
+            
+            const dataUrl = `data:image/${fileType};base64,` + file
+            campeonato.pictureBase64 = dataUrl
+
+            await campeonato.validate()
+            await campeonato.save()
+        
+            const response = await campeonatoData.getCampeonatoById(userId)
 
             return new ResponseDTO('Success', 200, 'ok', response)
         }
