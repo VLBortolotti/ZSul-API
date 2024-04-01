@@ -28,6 +28,13 @@ exports.getAthletesByTeamId = async (req, res, next) => {
     response.sendResponse(res)
 }
 
+exports.getAthleteByCertidaoId = async (req, res, next) => {
+    const { certidao } = req.params
+    const response     = await elencoService.getAthleteByCertidaoId(certidao)
+
+    response.sendResponse(res)
+}
+
 exports.updateAthleteById = async (req, res, next) => {
     const { id }           = req.params
     const { field, value } = req.body

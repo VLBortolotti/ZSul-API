@@ -9,6 +9,7 @@ router.post('/', elencoController.postAthlete)
 router.get('/', elencoController.getAllAthletes)
 router.get('/:id', elencoController.getAthleteById)
 router.get('/team/:id', elencoController.getAthletesByTeamId)
+router.get('/certidao/:certidao', elencoController.getAthleteByCertidaoId)
 
 router.patch('/:id', elencoController.updateAthleteById)
 

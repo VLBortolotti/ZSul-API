@@ -23,6 +23,10 @@ const elencoSchema = mongoose.Schema(
             type: String,
             default: null
         },
+        certidaoNascimento: {
+            type: String,
+            default: null
+        },
         school: {
             type: String,
             required: true

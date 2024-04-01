@@ -1,9 +1,16 @@
 const transferenciaService = require('../services/transferenciaService')
 
 exports.postTransferencia = async (req, res, next) => {
-    const { jogadorId, novoTimeId, motivo, dataDeSolicitcao } = req.body
+    const { jogadorId, novoTimeId, campeonatoId, motivo, dataDeSolicitcao } = req.body
 
-    const response = await transferenciaService.postTransferencia(jogadorId, novoTimeId, motivo, dataDeSolicitcao)
+    const response = await transferenciaService.postTransferencia(jogadorId, novoTimeId, campeonatoId, motivo, dataDeSolicitcao)
+
+    response.sendResponse(res)
+}
+
+exports.aprovarTransferenciaById = async (req, res, next) => {
+    const { id }   = req.params
+    const response = await transferenciaService.aprovarTransferenciaById(id)
 
     response.sendResponse(res)
 }

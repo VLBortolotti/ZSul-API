@@ -1,8 +1,8 @@
 const e = require('cors')
 const Sumula = require('../models/SumulaModel')
 
-exports.postSumula = async (campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, status) => {
-    const sumula = new Sumula({ campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, status })
+exports.postSumula = async (campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, status) => {
+    const sumula = new Sumula({ campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, status })
 
     return sumula.save()
 }
@@ -39,6 +39,26 @@ exports.getSumulaByCampeonatoUserId = async (campeonatoId, userId) => {
     return await Sumula.find({ campeonatoId: campeonatoId, userId: userId }, '-__v')
 }
 
+exports.findElencoIdByCampeonatoId = async (elencoId, campeonatoId) => {
+    return await Sumula.find({ elencoId: elencoId, campeonatoId: campeonatoId })
+}
+
+exports.findElencoDocumentByCampeonatoId = async (elencoDocumento, campeonatoId) => {
+    return await Sumula.find({ elencoDocumento: elencoDocumento, campeonatoId: campeonatoId }, '-__v')
+}
+
+exports.findElencoCPFByCampeonatoId = async (elencoCPF, campeonatoId) => {
+    return await Sumula.find({ documentNumber: elencoCPF, campeonatoId: campeonatoId })
+}
+
+exports.findElencoRGByCampeonatoId = async (elencoRG, campeonatoId) => {
+    return await Sumula.find({ documentNumber: elencoRG, campeonatoId: campeonatoId })
+}
+
+exports.findElencoCertidaoByCampeonatoId = async (elencoCertidao, campeonatoId) => {
+    return await Sumula.find({ documentNumber: elencoCertidao, campeonatoId: campeonatoId })
+}
+
 exports.checkIfSumulaExists = async (campeonatoId, userId, elencoId) => {
     return await Sumula.find({ campeonatoId: campeonatoId, userId: userId, elencoId: elencoId })
 }
@@ -49,6 +69,10 @@ exports.updateSumulaById = async (id, field, value) => {
 
 exports.deleteSumulaById = async (id) => {
     return await Sumula.deleteOne({ _id: id })
+}
+
+exports.deleteElencoIdByTeamId = async (elencoId, userId) => {
+    return await Sumula.deleteOne({ elencoId: elencoId, userId: userId })
 }
 
 exports.cleanDatabase = async () => {

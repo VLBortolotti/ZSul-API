@@ -37,20 +37,41 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
             return new ResponseDTO('Error', 400, 'Categoria do atleta não preenchida')
         }
 
-        // verificar se eh RG ou CPF
+        // verificar se eh RG, CPF ou Certidão de Nascimento 
         if (!documentNumber) {
             return new ResponseDTO('Error', 400, 'RG/CPF não preenchido')    
         }
 
         if (documentNumber.length === 11) {
-            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=documentNumber, school, category)
+            const findAthleteByTeamId = await elencoData.getAthleteCPFByTeamId(documentNumber, teamId)
+            if (Object.keys(findAthleteByTeamId).length >= 1) {
+                return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
+            } 
 
-            return new ResponseDTO('Success', 200, response)
+            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=documentNumber, certidaoNascimento=null, school, category)
+
+            return new ResponseDTO('Success', 200, 'ok', response)
 
         } else if (documentNumber.length === 10) {
-            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=documentNumber, CPF=null, school, category)
-            return new ResponseDTO('Success', 200, response)
+            const findAthleteByTeamId = await elencoData.getAthleteRGByTeamId(documentNumber, teamId)
+            if (Object.keys(findAthleteByTeamId).length >= 1) {
+                return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
+            } 
+
+            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=documentNumber, CPF=null, certidaoNascimento=null, school, category)
+            
+            return new ResponseDTO('Success', 200, 'ok', response)
         
+        } else if (documentNumber.length === 32) {
+            const findAthleteByTeamId = await elencoData.getAthleteCertidaoByTeamId(documentNumber, teamId)
+            if (Object.keys(findAthleteByTeamId).length >= 1) {
+                return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
+            } 
+
+            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=null, certidaoNascimento=documentNumber, school, category)
+            
+            return new ResponseDTO('Success', 200, 'ok', response)
+
         } else {
             return new ResponseDTO('Error', 500, 'Houve um erro no cadastro do elenco devido ao número do documento enviado')
         }
@@ -105,7 +126,24 @@ exports.getAthletesByTeamId = async (id) => {
         return new ResponseDTO('Success', 200, 'ok', response)
 
     } catch (error) {
+        console.log(`Erro: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
+    }
+}
 
+exports.getAthleteByCertidaoId = async (certidao) => {
+    try {
+        if (!certidao) {
+            return new ResponseDTO('Error', 400, 'Certidão de nascimento do atleta não preenchido')
+        }
+
+        const response = await elencoData.getAthleteByCertidaoId(certidao)
+
+        return new ResponseDTO('Success', 200, 'ok', response)
+
+    } catch (error) {
+        console.log(`Erro: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
     }
 }
 

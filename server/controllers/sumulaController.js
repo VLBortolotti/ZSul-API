@@ -43,9 +43,9 @@ exports.getSumulaByElencoId = async (req, res, next) => {
 }
 
 exports.precoSumulaByTeamAndCampeonatoId = async (req, res, next) => {
-    const { p1, p2, p3, teamId, campeonatoId } = req.body
+    const { teamId, campeonatoId } = req.body
 
-    const response = await sumulaService.precoSumulaByTeamAndCampeonatoId(p1, p2, p3, teamId, campeonatoId)
+    const response = await sumulaService.precoSumulaByTeamAndCampeonatoId(teamId, campeonatoId)
 
     response.sendResponse(res)
 }

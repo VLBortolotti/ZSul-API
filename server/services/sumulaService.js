@@ -35,7 +35,6 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         }
 
         const user = await usersData.getUserById(userId)
-
         if (!user) {
             return new ResponseDTO('Error', 400, 'Usuário (time) com este identificador não existente')
         }
@@ -49,15 +48,51 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         }
 
         const elenco = await elencoData.getAthleteById(elencoId)
-
         if (!elenco) {
             return new ResponseDTO('Error', 400, 'Atleta com este identificador não existente')
         }
 
-        const checkIfSumulaExists = await sumulaData.checkIfSumulaExists(campeonatoId, userId, elencoId)
+        // verificando se o atleta pertence à esse time
 
+        // const findElencoByTeam = await elencoData.findElencoByTeam(elenco._id, user._id)
+        // console.log(`findElencoByTeam: ${Object.keys(findElencoByTeam).length < 1}`)
+        // if (Object.keys(findElencoByTeam).length < 1) {
+        //     return new ResponseDTO('Error', 400, 'Este atleta não pertence a esse time')
+        // }
+
+        let elencoDocumento = null
+        let elencoByCampeonatoId = null
+        if (elenco.RG !== null) {
+            // console.log(`caiu aqui RG`)
+            elencoDocumento = elenco.RG
+            const elencoRG  = elenco.RG
+            elencoByCampeonatoId = await sumulaData.findElencoDocumentByCampeonatoId(elencoRG, campeonatoId)
+
+        } else if (elenco.CPF !== null) {
+            // console.log(`caiu aqui CPF`)
+            elencoDocumento = elenco.CPF
+            const elencoCPF = elenco.CPF
+            elencoByCampeonatoId = await sumulaData.findElencoDocumentByCampeonatoId(elencoCPF, campeonatoId)
+
+        } else if (elenco.certidaoNascimento !== null) {
+            // console.log(`caiu aqui CERTIDAO`)
+            elencoDocumento = elenco.certidaoNascimento
+            const elencoCertidao = elenco.certidaoNascimento
+            elencoByCampeonatoId = await sumulaData.findElencoDocumentByCampeonatoId(elencoCertidao, campeonatoId)
+        
+        } else {
+            return new ResponseDTO('Error', 500, 'Documento do atleta não encontrado')
+        }
+
+        // console.log(`\nelencoDocumento: ${elencoDocumento}\nelencoByCampeonatoId: ${elencoByCampeonatoId}`)
+        // const elencoByCampeonatoId = await sumulaData.findElencoIdByCampeonatoId(elencoId, campeonatoId)
+        if (Object.keys(elencoByCampeonatoId).length >= 2) {
+            return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado em outra súmula deste campeonato')
+        }
+
+        const checkIfSumulaExists = await sumulaData.checkIfSumulaExists(campeonatoId, userId, elencoId)
         if (checkIfSumulaExists.length !== 0) {
-            return new ResponseDTO('Error', 400, 'Este atleta já foi cadastrado como membro da súmula deste time ')
+            return new ResponseDTO('Error', 400, 'Este atleta já foi cadastrado como membro da súmula deste time')
         }
 
         const campeonatoName = campeonato.name
@@ -72,17 +107,17 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
             }
 
             if (sumulaActiveCount >= 30) {
-                const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, 'banco')
+                const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, 'banco')
 
                 return new ResponseDTO('Success', 200, 'ok', response)
             }
 
-            const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, status)
+            const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, status)
 
             return new ResponseDTO('Success', 200, 'ok', response)
 
         } else if (status == "banco"){
-            const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, status)
+            const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, status)
 
             return new ResponseDTO('Success', 200, 'ok', response)
 
@@ -203,20 +238,8 @@ exports.getSumulaByElencoId = async (id) => {
     }
 }
 
-exports.precoSumulaByTeamAndCampeonatoId = async (p1, p2, p3, teamId, campeonatoId) => {
+exports.precoSumulaByTeamAndCampeonatoId = async (teamId, campeonatoId) => {
     try {
-        if (!p1) {
-            return new ResponseDTO('Error', 400, 'Preço 1 não preenchido')
-        }
-
-        if (!p2) {
-            return new ResponseDTO('Error', 400, 'Preço 2 não preenchido')
-        }
-
-        if (!p3) {
-            return new ResponseDTO('Error', 400, 'Preço 3 não preenchido')
-        }
-
         if (!campeonatoId) {
             return new ResponseDTO('Error', 400, 'Identificador do campeonato não preenchido')
         }
@@ -248,42 +271,7 @@ exports.precoSumulaByTeamAndCampeonatoId = async (p1, p2, p3, teamId, campeonato
             return new ResponseDTO('Error', 404, 'Não foi possível computar a quantidade total de atletas na súmula deste time')
         }
 
-        const calcularValorUm = (allSumulaCount) => {
-            if (allSumulaCount <= 18) {
-                return parseFloat(allSumulaCount)
-
-            } else {
-                return parseFloat(18)
-            }
-        }
-
-        const calcularValorDois = (allSumulaCount) => {
-            if (allSumulaCount > 18 && allSumulaCount <= 30) {
-                return parseFloat(allSumulaCount - 18)
-
-            } else if (allSumulaCount > 30) {
-                return parseFloat(12)
-
-            } else if (allSumulaCount <= 18) {
-                return parseFloat(0)
-            }
-        }
-
-        const calcularValorTres = (allSumulaCount) => {
-            if (allSumulaCount > 30) {
-                return parseFloat(allSumulaCount - 30)
-
-            } else if (allSumulaCount <= 30) {
-                return parseFloat(0)
-            }
-        }
-
-        const valorUm   = calcularValorUm(allSumulaCount)
-        const valorDois = calcularValorDois(allSumulaCount)
-        const valorTres = calcularValorTres(allSumulaCount)
- 
-        const precoTotal = (valorUm * parseFloat(p1)) + (valorDois*  parseFloat(p2)) + 
-        (valorTres * parseFloat(p3))
+        const precoTotal = parseFloat(allSumulaCount) * 35
 
         return new ResponseDTO('Success', 200, 'ok', precoTotal)
 
