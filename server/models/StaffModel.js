@@ -27,10 +27,10 @@ const staffSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        fotoStaff: {
-            type: String, // Buffer
-            default: null
-        },
+        // fotoStaff: {
+        //     type: String, // Buffer
+        //     default: null
+        // },
         fotoStaffBase64: {
             type: String,
             default: null

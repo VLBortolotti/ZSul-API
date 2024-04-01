@@ -35,26 +35,26 @@ const elencoSchema = mongoose.Schema(
             type: String, 
             required: true
         },
-        RGFrente: {
-            type: String,
-            default: null
-        },
+        // RGFrente: {
+        //     type: String,
+        //     default: null
+        // },
         RGFrenteBase64: {
             type: String,
             default: null
         },
-        RGVerso: {
-            type: String,
-            default: null
-        },
+        // RGVerso: {
+        //     type: String,
+        //     default: null
+        // },
         RGVersoBase64: {
             type: String,
             default: null
         },
-        fotoAtleta: {
-            type: String,
-            default: null
-        },
+        // fotoAtleta: {
+        //     type: String,
+        //     default: null
+        // },
         fotoAtletaBase64: {
             type: String, 
             default: null

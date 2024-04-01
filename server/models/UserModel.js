@@ -60,10 +60,10 @@ const userSchema = mongoose.Schema(
             type: Number,
             default: null
         },
-        picture: {
-            type: String, // path
-            default: null
-        },
+        // picture: {
+        //     type: String, // path
+        //     default: null
+        // },
         pictureBase64: {
             type: String,
             default: null

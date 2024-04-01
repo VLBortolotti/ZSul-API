@@ -1,10 +1,10 @@
 const imageService = require('../services/imageService')
 
 exports.postImage = async (req, res, next) => {
-    const { userId, userType, imageField } = req.body
-    const image = req.file
+    const { userId, userType, imageField, file, fileType } = req.body
+    // const image = req.file
 
-    const response = await imageService.postImage(userId, userType, imageField, image)
+    const response = await imageService.postImage(userId, userType, imageField, file, fileType)
     response.sendResponse(res) 
 }
 
