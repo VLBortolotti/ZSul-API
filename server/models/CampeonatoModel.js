@@ -44,10 +44,10 @@ const campeonatoSchema = mongoose.Schema(
             type: String, 
             required: true
         },
-        pictureName: {  
-            type: String, 
-            default: null
-        },
+        // pictureName: {  
+        //     type: String, 
+        //     default: null
+        // },
         pictureBase64: { 
             type: String, 
             default: null
