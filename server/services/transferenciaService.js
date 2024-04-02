@@ -137,14 +137,14 @@ exports.aprovarTransferenciaById = async (id) => {
             jogadorDocument = jogador.certidaoNascimento
         }
         
-        console.log(`\nTestando transferência...\nJogador: ${JSON.stringify(jogador)}\n\n`)
-        console.log(`\njogadorName: ${jogadorName}\njogadorNasc: ${jogadorNasc}\njogadorSchool: ${jogadorSchool}\njogadorCategory: ${jogadorCategory}\njogadorDocument: ${jogadorDocument}`)
+        // console.log(`\nTestando transferência...\nJogador: ${JSON.stringify(jogador)}\n\n`)
+        // console.log(`\njogadorName: ${jogadorName}\njogadorNasc: ${jogadorNasc}\njogadorSchool: ${jogadorSchool}\njogadorCategory: ${jogadorCategory}\njogadorDocument: ${jogadorDocument}`)
 
         // console.log(sumulaTimeAtual)
 
         // Salvar atleta no novo time
         // verificar se response.msg == "Success"
-        const response1 = await elencoService.postAthlete(novoTimeId, jogadorName, jogadorNasc, jogadorRG, jogadorCPF, jogadorCertidao, jogadorSchool, jogadorCategory)
+        const response1 = await elencoService.postAthleteTransfer(novoTimeId, jogadorName, jogadorNasc, jogadorDocument, jogadorSchool, jogadorCategory)
         
         // Deletar jogador do time antigo
         const response2 = await elencoService.deleteAthleteById(jogadorId)

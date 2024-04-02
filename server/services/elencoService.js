@@ -17,7 +17,6 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
         }
 
         const user = await usersData.getUserById(teamId)
-        console.log(`user: ${user}`)
         if (!user) {
             return new ResponseDTO('Error', 404, 'Usuário com este identificador não existente')
         }
@@ -45,7 +44,7 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
 
         const yearOfBirth = dateOfBirth.split("/")[2]
         const athleteAge  = parseInt(currentDate) - parseInt(yearOfBirth)
-        console.log(`yearOfBirth: ${yearOfBirth}`)
+        // console.log(`yearOfBirth: ${yearOfBirth}`)
 
         if (!athleteAge) {
             return new ResponseDTO('Error', 500, 'Não foi possível calcular a categoria do atleta')
@@ -78,6 +77,83 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
             } 
 
             const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=null, certidaoNascimento=documentNumber, school, athleteAge)
+            
+            return new ResponseDTO('Success', 200, 'ok', response)
+
+        } else {
+            return new ResponseDTO('Error', 500, 'Houve um erro no cadastro do elenco devido ao número do documento enviado')
+        }
+
+    } catch (error) {
+        console.log(`Erro: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
+    }
+
+}
+
+exports.postAthleteTransfer = async (teamId, name, dateOfBirth, documentNumber, school, jogadorCategory) => {
+    try {
+        if (!teamId) {
+            return new ResponseDTO('Error', 400, 'Identificador do usuário não preenchido')
+        }
+
+        if (!ObjectId.isValid(teamId)) {
+            return new ResponseDTO('Error', 400, 'Identificador do usuário não é válido')
+        }
+
+        const user = await usersData.getUserById(teamId)
+        if (!user) {
+            return new ResponseDTO('Error', 404, 'Usuário com este identificador não existente')
+        }
+
+        if (!name) {
+            return new ResponseDTO('Error', 400, 'Nome não preenchido')
+        }
+
+        if (!dateOfBirth) {
+            return new ResponseDTO('Error', 400, 'Data de nascimento não preenchida')
+        }
+
+        if (!school) {
+            return new ResponseDTO('Error', 400, 'Escola não preenchida')
+        }
+
+        // verificar se eh RG, CPF ou Certidão de Nascimento 
+        if (!documentNumber) {
+            return new ResponseDTO('Error', 400, 'Número do documento (RG, CPF ou Certidão de Nascimento) não preenchido')    
+        }
+
+        if (!jogadorCategory) {
+            return new ResponseDTO('Error', 404, 'Não foi encontrada a categoria do jogador')
+        }
+
+        if (documentNumber.length === 11) {
+            const findAthleteByTeamId = await elencoData.getAthleteCPFByTeamId(documentNumber, teamId)
+            if (Object.keys(findAthleteByTeamId).length >= 1) {
+                return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
+            } 
+
+            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=documentNumber, certidaoNascimento=null, school, jogadorCategory)
+
+            return new ResponseDTO('Success', 200, 'ok', response)
+
+        } else if (documentNumber.length === 10) {
+            const findAthleteByTeamId = await elencoData.getAthleteRGByTeamId(documentNumber, teamId)
+            if (Object.keys(findAthleteByTeamId).length >= 1) {
+                return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
+            } 
+
+            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=documentNumber, CPF=null, certidaoNascimento=null, school, jogadorCategory)
+            
+            return new ResponseDTO('Success', 200, 'ok', response)
+        
+        } else if (documentNumber.length === 32) {
+            const findAthleteByTeamId = await elencoData.getAthleteCertidaoByTeamId(documentNumber, teamId)
+            if (Object.keys(findAthleteByTeamId).length >= 1) {
+                return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
+            } 
+
+            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=null, certidaoNascimento=documentNumber, school, jogadorCategory)
             
             return new ResponseDTO('Success', 200, 'ok', response)
 
