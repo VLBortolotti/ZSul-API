@@ -36,6 +36,8 @@ exports.aprovarSumulaPermissaoById = async (id) => {
         // console.log(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento)
         const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, 'banco')
 
+        await sumulaPermissaoData.deletarSumulaPermissaoById(id)
+
         return new ResponseDTO('Success', 200, 'ok', response)
 
     } catch (error) {
