@@ -34,6 +34,13 @@ exports.getUserById = async (req, res, next) => {
     response.sendResponse(res)
 }
 
+exports.getUserByEmailToRecoverPwd = async (req, res, next) => {
+    const { email } = req.params
+    const response  = await usersService.getUserByEmailToRecoverPwd(email)
+
+    response.sendResponse(res)
+}
+
 exports.updateUserById = async (req, res, next) => {
     const { id } = req.params
     const { field, value, userIdRequesting } = req.body

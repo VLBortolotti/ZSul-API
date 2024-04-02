@@ -206,6 +206,22 @@ exports.getUserById = async (id) => {
     }
 }
 
+exports.getUserByEmailToRecoverPwd = async (email) => {
+    try {
+        if (!email) {
+            return new ResponseDTO('Error', 400, 'Email não preenchido')
+        }
+
+        const response = await usersData.getUserByEmailToRecoverPwd(email)
+
+        return new ResponseDTO('Success', 200, 'ok', response)
+
+    } catch (error) {
+        console.log(`Erro: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
+    }
+}
+
 exports.updateUserById = async (id, userIdRequesting, field, value) => {
     try {
         if (!field) {

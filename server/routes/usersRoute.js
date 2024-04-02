@@ -6,6 +6,7 @@ router.post('/', usersController.postUser)
 // router.post('/admin', usersController.postUserAdmin)
 // router.post('/filter', usersController.getUsersByFilter)
 
+router.get('/recuperar/:email', usersController.getUserByEmailToRecoverPwd)
 router.get('/', usersController.getAllUsers)
 router.get('/:id', usersController.getUserById)
 

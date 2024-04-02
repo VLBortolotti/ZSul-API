@@ -33,6 +33,10 @@ exports.getUserByEmail = async (email) => {
     return User.findOne({ email: email }, '-__v -password')
 }
 
+exports.getUserByEmailToRecoverPwd = async (email) => {
+    return User.findOne({ email: email }, '-__v')
+}
+
 exports._getUserByEmail = async (email) => {
     return User.findOne({ email: email }, '-__v')
 }
