@@ -32,7 +32,7 @@ exports.getJogoGrupoById = async (grupoId) => {
 }
 
 exports.deleteJogoById = async (id) => {
-    return await Jogo.deleteOne({ _id: id }, '-__v')
+    return await Jogo.deleteOne({ _id: id })
 }
 
 exports.cleanDatabase = async () => {
