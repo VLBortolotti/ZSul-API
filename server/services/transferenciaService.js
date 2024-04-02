@@ -11,27 +11,14 @@ const TransferenciaModel = require('../models/TransferenciaModel')
 const ObjectId = require('mongoose').Types.ObjectId
 const { ResponseDTO } = require('../dtos/Response')
 
-exports.postTransferencia = async (jogadorId, novoTimeId, campeonatoId, motivo, dataDeSolicitcao) => {
+exports.postTransferencia = async (jogadorId, novoTimeId, motivo, dataDeSolicitacao) => {
     try {
         if (!motivo) {
             return new ResponseDTO('Error', 400, 'Motivo não preenchido')
         }
 
-        if (!dataDeSolicitcao) {
+        if (!dataDeSolicitacao) {
             return new ResponseDTO('Error', 400, 'Data de solicitação não preenchido')
-        }
-
-        if (!campeonatoId) {
-            return new ResponseDTO('Error', 400, 'Identificador do campeonato não preenchido')
-        }
-
-        if (!ObjectId.isValid(campeonatoId)) {
-            return new ResponseDTO('Error', 400, 'Identificador do campeonato não é válido')
-        }
-
-        const campeonato = await campeonatoData.getCampeonatoById(campeonatoId)
-        if (!campeonato) {
-            return new ResponseDTO('Error', 400, 'Campeonato com este identificador não existente')
         }
 
         if (!novoTimeId) {
@@ -66,7 +53,7 @@ exports.postTransferencia = async (jogadorId, novoTimeId, campeonatoId, motivo, 
         const jogadorNomeTime  = jogadorTime.teamName
         const jogadorNome      = jogador.name
 
-        const response = await transferenciaData.postTransferencia(campeonatoId, jogadorId, jogadorNome, jogadorTimeId, jogadorNomeTime, novoTimeId, motivo, dataDeSolicitcao)
+        const response = await transferenciaData.postTransferencia(jogadorId, jogadorNome, jogadorTimeId, jogadorNomeTime, novoTimeId, motivo, dataDeSolicitacao)
 
         return new ResponseDTO('Success', 200, 'ok', response)
 
@@ -124,17 +111,6 @@ exports.aprovarTransferenciaById = async (id) => {
             return new ResponseDTO('Error', 404, 'Novo time não encontrado')
         }
 
-        // Verificando se o campeonato ainda existe
-        const campeonatoId = transferencia.campeonatoId
-        if (!campeonatoId) {
-            return new ResponseDTO('Error', 400, 'Identificador do campeonato não encontrado')
-        }
-
-        const campeonato = await campeonatoData.getCampeonatoById(campeonatoId)
-        if (!campeonato) {
-            return new ResponseDTO('Error', 404, 'Campeonato com este identificador não existente')
-        }
-
         // const sumulaTimeAtual = await sumulaData.getSumulaByElencoIdCampeonatoIdUserId(jogadorId, campeonatoId, timeAtualId)
 
         // console.log(`sumulaTimeAtual: ${sumulaTimeAtual}`)
@@ -170,7 +146,7 @@ exports.aprovarTransferenciaById = async (id) => {
         const response2 = await elencoService.deleteAthleteById(jogadorId)
 
         // Deletar atleta da súmula do time antigo
-        const response3 = await sumulaData.deleteSumulaByCampeonatoIdAndUserId(jogadorId, campeonatoId, timeAtualId)
+        const response3 = await sumulaData.deleteSumulaByElencoIdAndUserId(jogadorId, timeAtualId)
 
         // Deletar transferência
         const response4 = await transferenciaData.reprovarTransferenciaById(id)

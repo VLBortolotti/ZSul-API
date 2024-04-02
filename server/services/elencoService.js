@@ -6,7 +6,7 @@ const usersData       = require('../data/usersData')
 const { ResponseDTO } = require('../dtos/Response')
 const fs = require('fs')
 
-exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, category) => {
+exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, currentDate) => {
     try {
         if (!teamId) {
             return new ResponseDTO('Error', 400, 'Identificador do usuário não preenchido')
@@ -17,6 +17,7 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
         }
 
         const user = await usersData.getUserById(teamId)
+        console.log(`user: ${user}`)
         if (!user) {
             return new ResponseDTO('Error', 404, 'Usuário com este identificador não existente')
         }
@@ -33,13 +34,21 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
             return new ResponseDTO('Error', 400, 'Escola não preenchida')
         }
 
-        if (!category) {
-            return new ResponseDTO('Error', 400, 'Categoria do atleta não preenchida')
-        }
-
         // verificar se eh RG, CPF ou Certidão de Nascimento 
         if (!documentNumber) {
-            return new ResponseDTO('Error', 400, 'RG/CPF não preenchido')    
+            return new ResponseDTO('Error', 400, 'Número do documento (RG, CPF ou Certidão de Nascimento) não preenchido')    
+        }
+
+        if (!currentDate) {
+            return new ResponseDTO('Error', 400, 'Data atual não preenchido')
+        }
+
+        const yearOfBirth = dateOfBirth.split("/")[2]
+        const athleteAge  = parseInt(currentDate) - parseInt(yearOfBirth)
+        console.log(`yearOfBirth: ${yearOfBirth}`)
+
+        if (!athleteAge) {
+            return new ResponseDTO('Error', 500, 'Não foi possível calcular a categoria do atleta')
         }
 
         if (documentNumber.length === 11) {
@@ -48,7 +57,7 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
                 return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
             } 
 
-            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=documentNumber, certidaoNascimento=null, school, category)
+            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=documentNumber, certidaoNascimento=null, school, athleteAge)
 
             return new ResponseDTO('Success', 200, 'ok', response)
 
@@ -58,7 +67,7 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
                 return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
             } 
 
-            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=documentNumber, CPF=null, certidaoNascimento=null, school, category)
+            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=documentNumber, CPF=null, certidaoNascimento=null, school, athleteAge)
             
             return new ResponseDTO('Success', 200, 'ok', response)
         
@@ -68,7 +77,7 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
                 return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
             } 
 
-            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=null, certidaoNascimento=documentNumber, school, category)
+            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=null, certidaoNascimento=documentNumber, school, athleteAge)
             
             return new ResponseDTO('Success', 200, 'ok', response)
 

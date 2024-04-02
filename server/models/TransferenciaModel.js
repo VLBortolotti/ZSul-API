@@ -3,10 +3,6 @@ const database = require('../infra/database')
 
 const TransferenciaSchema = mongoose.Schema(
     {
-        campeonatoId: {
-            type: mongoose.Types.ObjectId,
-            required: true
-        },
         jogadorId: {
             type: mongoose.Types.ObjectId,
             required: true
@@ -31,7 +27,7 @@ const TransferenciaSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        dataDeSolicitcao: {
+        dataDeSolicitacao: {
             type: String,
             required: true
         }

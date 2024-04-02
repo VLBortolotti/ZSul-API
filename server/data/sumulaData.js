@@ -75,8 +75,8 @@ exports.deleteSumulaById = async (id) => {
     return await Sumula.deleteOne({ _id: id })
 }
 
-exports.deleteSumulaByCampeonatoIdAndUserId = async (elencoId, campeonatoId, userId) => {
-    return await Sumula.deleteOne({ elencoId: elencoId, campeonatoId: campeonatoId, userId: userId })
+exports.deleteSumulaByElencoIdAndUserId = async (elencoId, userId) => {
+    return await Sumula.deleteMany({ elencoId: elencoId, userId: userId })
 }
 
 exports.deleteElencoIdByTeamId = async (elencoId, userId) => {

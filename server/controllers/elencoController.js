@@ -1,9 +1,9 @@
 const elencoService = require('../services/elencoService')
 
 exports.postAthlete = async (req, res, next) => {
-    const { teamId, name, dateOfBirth, documentNumber, school, category } = req.body
+    const { teamId, name, dateOfBirth, documentNumber, school, currentDate } = req.body
 
-    const response = await elencoService.postAthlete(teamId, name, dateOfBirth, documentNumber, school, category)
+    const response = await elencoService.postAthlete(teamId, name, dateOfBirth, documentNumber, school, currentDate)
     
     response.sendResponse(res)
 }

@@ -1,8 +1,8 @@
 const Transferencia = require('../models/TransferenciaModel')
 
-exports.postTransferencia = async (campeonatoId, jogadorId, jogadorNome, timeAtualId, nomeTime, novoTimeId, motivo, dataDeSolicitcao) => {
+exports.postTransferencia = async (campeonatoId, jogadorId, jogadorNome, timeAtualId, nomeTime, novoTimeId, motivo, dataDeSolicitacao) => {
     const transferencia = new Transferencia({
-        campeonatoId, jogadorId, jogadorNome, timeAtualId, nomeTime, novoTimeId, motivo, dataDeSolicitcao
+        campeonatoId, jogadorId, jogadorNome, timeAtualId, nomeTime, novoTimeId, motivo, dataDeSolicitacao
     })
 
     return await transferencia.save()
