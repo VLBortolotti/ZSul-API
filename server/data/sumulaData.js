@@ -35,6 +35,10 @@ exports.getSumulaByElencoId = async (id) => {
     return await Sumula.find({ elencoId: id }, '-__v')
 }
 
+exports.getSumulaByElencoIdCampeonatoIdUserId = async (campeonatoId, elencoId, userId) => {
+    return await Sumula.findOne({ campeonatoId: campeonatoId, userId: userId, elencoId: elencoId })
+}
+
 exports.getSumulaByCampeonatoUserId = async (campeonatoId, userId) => {
     return await Sumula.find({ campeonatoId: campeonatoId, userId: userId }, '-__v')
 }
@@ -69,6 +73,10 @@ exports.updateSumulaById = async (id, field, value) => {
 
 exports.deleteSumulaById = async (id) => {
     return await Sumula.deleteOne({ _id: id })
+}
+
+exports.deleteSumulaByCampeonatoIdAndUserId = async (elencoId, campeonatoId, userId) => {
+    return await Sumula.deleteOne({ elencoId: elencoId, campeonatoId: campeonatoId, userId: userId })
 }
 
 exports.deleteElencoIdByTeamId = async (elencoId, userId) => {

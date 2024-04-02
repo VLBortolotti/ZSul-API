@@ -1,14 +1,15 @@
 const transferenciaData = require('../data/transferenciaData')
+const campeonatoData    = require('../data/campeonatoData')
 const elencoData = require('../data/elencoData')
 const usersData  = require('../data/usersData')
 const sumulaData = require('../data/sumulaData')
-const campeonatoData = require('../data/campeonatoData')
 
 const elencoService = require('../services/elencoService')
 
+const TransferenciaModel = require('../models/TransferenciaModel')
+
 const ObjectId = require('mongoose').Types.ObjectId
 const { ResponseDTO } = require('../dtos/Response')
-const TransferenciaModel = require('../models/TransferenciaModel')
 
 exports.postTransferencia = async (jogadorId, novoTimeId, campeonatoId, motivo, dataDeSolicitcao) => {
     try {
@@ -134,17 +135,49 @@ exports.aprovarTransferenciaById = async (id) => {
             return new ResponseDTO('Error', 404, 'Campeonato com este identificador não existente')
         }
 
+        // const sumulaTimeAtual = await sumulaData.getSumulaByElencoIdCampeonatoIdUserId(jogadorId, campeonatoId, timeAtualId)
+
+        // console.log(`sumulaTimeAtual: ${sumulaTimeAtual}`)
+
+        // const sumulaTimeNovo = await sumulaData.getSumulaByCampeonatoUserId(jogadorId, campeonatoId, novoTimeId)
+
         // Aprovando a transferência
 
         // Mover o jogador de um time para outro
-        await elencoService.postAthlete(novoTimeId, jogador.name, jogador.dateOfBirth, jogador.documentNumber, jogador.school, jogador.category)
+        const jogadorName     = jogador.name
+        const jogadorNasc     = jogador.dateOfBirth
+        const jogadorSchool   = jogador.school
+        const jogadorCategory = jogador.category
+        let jogadorDocument   = null
 
-        // Mover o jogador de uma sumula para outra
+        if (jogador.RG) {
+            jogadorDocument = jogador.RG
+        } else if (jogador.CPF) {
+            jogadorDocument = jogador.CPF
+        } else if (jogador.certidaoNascimento) {
+            jogadorDocument = jogador.certidaoNascimento
+        }
 
-        // Deletar jogador da sumula do time antigo
+        console.log(`\njogadorName: ${jogadorName}\njogadorNasc: ${jogadorNasc}\njogadorSchool: ${jogadorSchool}\njogadorCategory: ${jogadorCategory}\njogadorDocument: ${jogadorDocument}`)
 
+        // console.log(sumulaTimeAtual)
+
+        // Salvar atleta no novo time
+        // verificar se response.msg == "Success"
+        const response1 = await elencoService.postAthlete(novoTimeId, jogadorName, jogadorNasc, jogadorDocument, jogadorSchool, jogadorCategory)
+        
         // Deletar jogador do time antigo
+        const response2 = await elencoService.deleteAthleteById(jogadorId)
 
+        // Deletar atleta da súmula do time antigo
+        const response3 = await sumulaData.deleteSumulaByCampeonatoIdAndUserId(jogadorId, campeonatoId, timeAtualId)
+
+        // Deletar transferência
+        const response4 = await transferenciaData.reprovarTransferenciaById(id)
+
+        // console.log(`response1: ${response1}`)
+
+        return new ResponseDTO('Success', 200, 'ok', response1)
 
     } catch (error) {
         console.log(`Erro: ${error}`)
