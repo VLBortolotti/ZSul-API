@@ -111,12 +111,6 @@ exports.aprovarTransferenciaById = async (id) => {
             return new ResponseDTO('Error', 404, 'Novo time não encontrado')
         }
 
-        // const sumulaTimeAtual = await sumulaData.getSumulaByElencoIdCampeonatoIdUserId(jogadorId, campeonatoId, timeAtualId)
-
-        // console.log(`sumulaTimeAtual: ${sumulaTimeAtual}`)
-
-        // const sumulaTimeNovo = await sumulaData.getSumulaByCampeonatoUserId(jogadorId, campeonatoId, novoTimeId)
-
         // Aprovando a transferência
 
         // Mover o jogador de um time para outro
