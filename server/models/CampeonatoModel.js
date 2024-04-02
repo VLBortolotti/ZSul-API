@@ -51,6 +51,10 @@ const campeonatoSchema = mongoose.Schema(
         pictureBase64: { 
             type: String, 
             default: null
+        },
+        status: {
+            type: String,
+            default: "aberto"
         }
     }
 );
