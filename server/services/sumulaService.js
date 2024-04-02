@@ -2,6 +2,7 @@ const campeonatoData = require('../data/campeonatoData')
 const usersData  = require('../data/usersData')
 const elencoData = require('../data/elencoData')
 const sumulaData = require('../data/sumulaData')
+const sumulaPermissaoData = require('../data/sumulaPermissaoData')
 
 const SumulaModel = require('../models/SumulaModel')
 const ObjectId    = require('mongoose').Types.ObjectId
@@ -99,10 +100,13 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         const campeonatoCategoria = campeonato.categoria
         const elencoCategoria     = elenco.category
 
-        // if (elencoCategoria > campeonatoCategoria) {
-        //     // cadastrar elenco na SumulaPermissaoModel
+        // Cateogira do atleta acima da categoria do campeonato
+        // entao, cadastrar elenco na SumulaPermissaoModel
+        if (elencoCategoria > campeonatoCategoria) {
+            const response = await sumulaPermissaoData.postSumulaPermissao(campeonatoId, campeonatoCategoria, campeonatoName, userId, userName, elencoId, elencoCategoria, elencoName, elencoDocumento, 'banco')
 
-        // }
+            return new ResponseDTO('Success', 200, 'ok', response)
+        }
         
         if (status == "ativo") {
             const sumulaActiveCount = await sumulaData.countAllActiveSumulasByCampeonatoAndUserId(campeonatoId, userId)
