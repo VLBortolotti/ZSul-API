@@ -30,9 +30,10 @@ exports.aprovarSumulaPermissaoById = async (id) => {
         const elencoDocumento = sumulaPermissao.elencoDocumento
         const userName   = sumulaPermissao.userName
         const userId     = sumulaPermissao.userId
-        const elencoId   = sumulaData.elencoId
+        const elencoId   = sumulaPermissao.elencoId
         const elencoName = sumulaPermissao.elencoName
 
+        // console.log(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento)
         const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, 'banco')
 
         return new ResponseDTO('Success', 200, 'ok', response)
