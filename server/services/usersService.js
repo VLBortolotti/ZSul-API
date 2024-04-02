@@ -55,7 +55,7 @@ exports.postUser = async (teamName, email, password, confirmPassword, city, stat
 
         const salt      = await bcrypt.genSalt(12)
         const hashedPwd = await bcrypt.hash(password, salt)
-        await usersData.postUser(teamName, email, hashedPwd, city, state)
+        await usersData.postUser(teamName, email, password, city, state)
 
         const newUser = await usersData.getUserByTeamName(teamName)
 
@@ -131,7 +131,7 @@ exports.postUserAdmin = async (userId, teamName, email, password, confirmPasswor
 
         const salt      = await bcrypt.genSalt(12)
         const hashedPwd = await bcrypt.hash(password, salt)
-        await usersData.postUserAdmin(teamName, email, hashedPwd, city, state)
+        await usersData.postUserAdmin(teamName, email, password, city, state)
 
         // const newUser  = await JogoModel.findOneAndUpdate({ teamName: teamName }, { permission: "admin" })
         // newJogo[field] = value
@@ -166,9 +166,13 @@ exports.loginUser = async (email, password) => {
             return new ResponseDTO('Error', 404, 'Usuário com estas credenciais não encontrado')
         }
 
-        const checkPwd = await bcrypt.compare(password, user.password)
+        // const checkPwd = await bcrypt.compare(password, user.password)
 
-        if (!checkPwd) {
+        // if (!checkPwd) {
+        //     return new ResponseDTO('Error', 400, 'Credenciais erradas')
+        // }
+
+        if (password !== user.password) {
             return new ResponseDTO('Error', 400, 'Credenciais erradas')
         }
         

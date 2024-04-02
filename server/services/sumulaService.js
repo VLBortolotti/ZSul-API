@@ -63,19 +63,16 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         let elencoDocumento = null
         let elencoByCampeonatoId = null
         if (elenco.RG !== null) {
-            // console.log(`caiu aqui RG`)
             elencoDocumento = elenco.RG
             const elencoRG  = elenco.RG
             elencoByCampeonatoId = await sumulaData.findElencoDocumentByCampeonatoId(elencoRG, campeonatoId)
 
         } else if (elenco.CPF !== null) {
-            // console.log(`caiu aqui CPF`)
             elencoDocumento = elenco.CPF
             const elencoCPF = elenco.CPF
             elencoByCampeonatoId = await sumulaData.findElencoDocumentByCampeonatoId(elencoCPF, campeonatoId)
 
         } else if (elenco.certidaoNascimento !== null) {
-            // console.log(`caiu aqui CERTIDAO`)
             elencoDocumento = elenco.certidaoNascimento
             const elencoCertidao = elenco.certidaoNascimento
             elencoByCampeonatoId = await sumulaData.findElencoDocumentByCampeonatoId(elencoCertidao, campeonatoId)
@@ -99,6 +96,14 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         const elencoName = elenco.name
         const userName   = user.teamName
 
+        const campeonatoCategoria = campeonato.categoria
+        const elencoCategoria     = elenco.category
+
+        // if (elencoCategoria > campeonatoCategoria) {
+        //     // cadastrar elenco na SumulaPermissaoModel
+
+        // }
+        
         if (status == "ativo") {
             const sumulaActiveCount = await sumulaData.countAllActiveSumulasByCampeonatoAndUserId(campeonatoId, userId)
         
