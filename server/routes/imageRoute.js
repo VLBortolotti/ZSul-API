@@ -12,6 +12,7 @@ router.get('/all', imageController.getAllImages)
 
 router.patch('/:id', imageController.updateImageByUserId)
 
-router.delete('/:id', imageController.deleteImageByUserId)
+router.delete('/', imageController.cleanDatabase)
+router.delete('/:id', imageController.deleteImageById)
 
 module.exports = router

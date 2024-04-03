@@ -33,6 +33,15 @@ exports.updateImageByUserId = async (req, res, next) => {
 
 }
 
-exports.deleteImageByUserId = async (req, res, next) => {
+exports.deleteImageById = async (req, res, next) => {
+    const { id } = req.params
+    const response = await imageService.deleteImageByUserId(id)
 
+    response.sendResponse(res)
+}
+
+exports.cleanDatabase = async (req, res, next) => {
+    const response = await imageService.cleanDatabase()
+
+    response.sendResponse(res)
 }

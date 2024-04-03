@@ -303,6 +303,34 @@ exports.updateImageByUserId = async (userId, userType, imageField, image, imageN
 
 }
 
-exports.deleteImageByUserId = async (userId, userType, imageField, image, imageName) => {
-    
+exports.deleteImageById = async (id) => {
+    try {
+        if (!id) {
+            return new ResponseDTO('Error', 400, 'Identificador da imagem não preenchido')
+        }
+
+        if (!ObjectId.isValid(id)) {
+            return new ResponseDTO('Error', 400, 'Identificador dda imagem não é válido')
+        }
+
+        const response = await imageData.deleteImageById(id)
+
+        return new ResponseDTO('Success', 200, 'ok', response)
+
+    }  catch (error) {
+        console.log(`Error: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
+    }
+}
+
+exports.cleanDatabase = async () => {
+    try {   
+        const response = await imageData.cleanDatabase()
+
+        return new ResponseDTO('Success', 200, 'ok', response)
+
+    } catch (error) {
+        console.log(`Error: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
+    }
 }

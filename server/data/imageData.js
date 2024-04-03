@@ -24,6 +24,10 @@ exports.updateImageByUserId = async (userId, userType, imageField, image, imageN
 
 }
 
-exports.deleteImageByUserId = async (userId, userType, imageField, image, imageName) => {
+exports.deleteImageById = async (id) => {
+    return await Image.deleteOne({ _id: id })
+}
 
+exports.cleanDatabase = async () => {
+    return await Image.deleteMany({ })
 }

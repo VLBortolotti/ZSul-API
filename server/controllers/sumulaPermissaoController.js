@@ -21,7 +21,7 @@ exports.reprovarSumulaPermissaoById = async (req, res, next) => {
 }
 
 exports.cleanDatabase = async (req, res, next) => {
-    const response = await sumulaPermissaoController.cleanDatabase(id)
+    const response = await sumulaPermissaoController.cleanDatabase()
     
     response.sendResponse(res)
 }
