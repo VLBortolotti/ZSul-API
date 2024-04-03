@@ -11,6 +11,7 @@ app.use(express.json())
 app.use(helmet())
 
 app.use('/users', require('./routes/usersRoute'))
+app.use('/elenco/status', require('./routes/elencoStatusRoute'))
 app.use('/elenco', require('./routes/elencoRoute'))
 app.use('/staff', require('./routes/staffRoute'))
 app.use('/campeonatos', require('./routes/campeonatoRoute'))
