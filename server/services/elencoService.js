@@ -255,6 +255,29 @@ exports.updateAthleteById = async (id, field, value) => {
             return new ResponseDTO('Error', 400, 'Valor não preenchido')
         }
 
+        if (field == "documentNumber") {
+            let documentField;
+
+            if (athlete.RG !== null) {
+                documentField = "RG"
+                
+            } else if (athlete.CPF !== null) {
+                documentField = "CPF"
+                
+            } else if (athlete.certidaoNascimento !== null) {
+                documentField = "certidaoNascimento"
+            }            
+
+            athlete[documentField] = value
+
+            await athlete.validate()
+            await athlete.save()
+
+            const response = await elencoData.getAthleteById(id)
+
+            return new ResponseDTO('Success', 200, 'ok', response)
+        }
+
         athlete[field] = value
 
         await athlete.validate()
