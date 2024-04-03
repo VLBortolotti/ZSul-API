@@ -1,9 +1,10 @@
-const jwt             = require('jsonwebtoken')
-const secret          = process.env.SECRET
-const ObjectId        = require('mongoose').Types.ObjectId;
-const elencoData      = require('../data/elencoData')
-const usersData       = require('../data/usersData')
-const { ResponseDTO } = require('../dtos/Response')
+const jwt              = require('jsonwebtoken')
+const secret           = process.env.SECRET
+const ObjectId         = require('mongoose').Types.ObjectId;
+const elencoStatusData = require('../data/elencoStatusData')
+const elencoData       = require('../data/elencoData')
+const usersData        = require('../data/usersData')
+const { ResponseDTO }  = require('../dtos/Response')
 const fs = require('fs')
 
 exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, currentDate) => {
@@ -169,9 +170,10 @@ exports.postAthleteTransfer = async (teamId, name, dateOfBirth, documentNumber, 
 
 exports.getAllAthletes = async () => {
     try {
-        const response = await elencoData.getAllAthletes()
+        const response1 = await elencoData.getAllAthletes()
+        const response2 = await elencoStatusData.getElencoStatus()
 
-        return new ResponseDTO('Success', 200, 'ok', response)
+        return new ResponseDTO('Success', 200, 'ok', [response1, response2])
 
     } catch (error) {
         console.log(`Erro: ${error}`)
@@ -185,9 +187,10 @@ exports.getAthleteById = async (id) => {
             return new ResponseDTO('Error', 400, 'Identificador do atleta não é válido')
         }
 
-        const response = await elencoData.getAthleteById(id)
+        const response1 = await elencoData.getAthleteById(id)
+        const response2 = await elencoStatusData.getElencoStatus()
         
-        return new ResponseDTO('Success', 200, 'ok', response)
+        return new ResponseDTO('Success', 200, 'ok', [response1, response2])
 
     } catch (error) {
         console.log(`Erro: ${error}`)
@@ -205,9 +208,10 @@ exports.getAthletesByTeamId = async (id) => {
             return new ResponseDTO('Error', 400, 'Identificador do usuário não é válido')
         }
 
-        const response = await elencoData.getAthletesByTeamId(id)
+        const response1 = await elencoData.getAthletesByTeamId(id)
+        const response2 = await elencoStatusData.getElencoStatus()
 
-        return new ResponseDTO('Success', 200, 'ok', response)
+        return new ResponseDTO('Success', 200, 'ok', [response1, response2])
 
     } catch (error) {
         console.log(`Erro: ${error}`)
@@ -221,9 +225,10 @@ exports.getAthleteByCertidaoId = async (certidao) => {
             return new ResponseDTO('Error', 400, 'Certidão de nascimento do atleta não preenchido')
         }
 
-        const response = await elencoData.getAthleteByCertidaoId(certidao)
+        const response1 = await elencoData.getAthleteByCertidaoId(certidao)
+        const response2 = await elencoStatusData.getElencoStatus()
 
-        return new ResponseDTO('Success', 200, 'ok', response)
+        return new ResponseDTO('Success', 200, 'ok', [response1, response2])
 
     } catch (error) {
         console.log(`Erro: ${error}`)
