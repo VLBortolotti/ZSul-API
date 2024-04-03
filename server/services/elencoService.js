@@ -60,16 +60,6 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
 
             return new ResponseDTO('Success', 200, 'ok', response)
 
-        } else if (documentNumber.length === 10) {
-            const findAthleteByTeamId = await elencoData.getAthleteRGByTeamId(documentNumber, teamId)
-            if (Object.keys(findAthleteByTeamId).length >= 1) {
-                return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
-            } 
-
-            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=documentNumber, CPF=null, certidaoNascimento=null, school, athleteAge)
-            
-            return new ResponseDTO('Success', 200, 'ok', response)
-        
         } else if (documentNumber.length === 32) {
             const findAthleteByTeamId = await elencoData.getAthleteCertidaoByTeamId(documentNumber, teamId)
             if (Object.keys(findAthleteByTeamId).length >= 1) {
@@ -81,8 +71,17 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
             return new ResponseDTO('Success', 200, 'ok', response)
 
         } else {
-            return new ResponseDTO('Error', 500, 'Houve um erro no cadastro do elenco devido ao número do documento enviado')
+            const findAthleteByTeamId = await elencoData.getAthleteRGByTeamId(documentNumber, teamId)
+            if (Object.keys(findAthleteByTeamId).length >= 1) {
+                return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
+            } 
+
+            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=documentNumber, CPF=null, certidaoNascimento=null, school, athleteAge)
+            
+            return new ResponseDTO('Success', 200, 'ok', response)
         }
+
+        return new ResponseDTO('Error', 500, 'Houve um erro no cadastro do elenco devido ao número do documento enviado')
 
     } catch (error) {
         console.log(`Erro: ${error}`)
