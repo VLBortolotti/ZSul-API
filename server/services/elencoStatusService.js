@@ -8,24 +8,26 @@ exports.postElencoStatus = async (status) => {
             return new ResponseDTO('Error', 400, 'O status não foi preenchido')
         }
 
-        const elencoStatus = elencoStatusData.getElencoStatus()
-        console.log(Object.keys(elencoStatus).length)
-        if (elencoStatus) {
+        const elencoStatus = await elencoStatusData.getElencoStatus()
+
+        if (Object.keys(elencoStatus).length == 1) {
             const newElencoStatus  = await ElencoStatusModel.findOneAndUpdate({ }, { status: status })
-            // newElencoStatus[status] = status
 
-            // await newElencoStatus.save()
-
-            // elencoStatus[status] = status
-            // await elencoStatus.save()
+            await newElencoStatus.save()
             
             const response = await elencoStatusData.getElencoStatus()
+
             return new ResponseDTO('Success', 200, 'ok', response)
-        } 
+        
+        } else if (Object.keys(elencoStatus).length == 0) {
+            const response = await elencoStatusData.postElencoStatus(status)
+    
+            return new ResponseDTO('Success', 200, 'ok', response)
+        
+        } else {
+            return new ResponseDTO('Error', 500, 'Houve um erro ao salvar o status do elenco no servidor')
+        }
 
-        const response = await elencoStatusData.postElencoStatus(status)
-
-        return new ResponseDTO('Success', 200, 'ok', response)
 
     } catch (error) {
         console.log(`Erro: ${error}`)
