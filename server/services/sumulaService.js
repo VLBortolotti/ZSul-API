@@ -104,7 +104,7 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         if (elencoCategoria > campeonatoCategoria) {
             const response = await sumulaPermissaoData.postSumulaPermissao(campeonatoId, campeonatoCategoria, campeonatoName, userId, userName, elencoId, elencoCategoria, elencoName, elencoDocumento, 'banco')
 
-            return new ResponseDTO('Success', 200, 'ok', response)
+            return new ResponseDTO('Success', 299, 'ok', response)
         }
         
         if (status == "ativo") {
