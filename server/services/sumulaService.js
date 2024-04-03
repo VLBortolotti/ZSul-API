@@ -27,6 +27,15 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
             return new ResponseDTO('Success', 400, 'Campeonato com este identificador não existente')
         }
 
+        const inscricoesAtletas = campeonato.inscricoesAtletas
+        if (!inscricoesAtletas) {
+            return new ResponseDTO('Error', 400, 'Status das inscrições dos atletas neste campeonato não encontrado')
+        }
+
+        if (inscricoesAtletas === "fechado") {
+            return new ResponseDTO('Error', 400, 'Este campeonato não permite mais a inscrição de novos atletas na súmula')
+        }
+
         if (!userId) {
             return new ResponseDTO('Error', 400, 'Identificador do usuário (time) não preenchido')
         }
@@ -53,14 +62,6 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
             return new ResponseDTO('Error', 400, 'Atleta com este identificador não existente')
         }
 
-        // verificando se o atleta pertence à esse time
-
-        // const findElencoByTeam = await elencoData.findElencoByTeam(elenco._id, user._id)
-        // console.log(`findElencoByTeam: ${Object.keys(findElencoByTeam).length < 1}`)
-        // if (Object.keys(findElencoByTeam).length < 1) {
-        //     return new ResponseDTO('Error', 400, 'Este atleta não pertence a esse time')
-        // }
-
         let elencoDocumento = null
         let elencoByCampeonatoId = null
         if (elenco.RG !== null) {
@@ -82,8 +83,6 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
             return new ResponseDTO('Error', 500, 'Documento do atleta não encontrado')
         }
 
-        // console.log(`\nelencoDocumento: ${elencoDocumento}\nelencoByCampeonatoId: ${elencoByCampeonatoId}`)
-        // const elencoByCampeonatoId = await sumulaData.findElencoIdByCampeonatoId(elencoId, campeonatoId)
         if (Object.keys(elencoByCampeonatoId).length >= 2) {
             return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado em outra súmula deste campeonato')
         }
@@ -233,7 +232,7 @@ exports.getSumulaByElencoId = async (id) => {
         }
 
         const elenco = await elencoData.getAthleteById(id)
-        if (!id) {
+        if (!elenco) {
             return new ResponseDTO('Error', 400, 'Atleta com este identificador não existente')
         }
 

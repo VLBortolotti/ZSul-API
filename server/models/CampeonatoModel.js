@@ -55,6 +55,10 @@ const campeonatoSchema = mongoose.Schema(
         status: {
             type: String,
             default: "aberto"
+        },
+        inscricoesAtletas: {
+            type: String,
+            default: "aberto"
         }
     }
 );

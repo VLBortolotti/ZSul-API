@@ -6,7 +6,7 @@ const ObjectId        = require('mongoose').Types.ObjectId;
 const campeonatoData  = require('../data/campeonatoData')
 const fs = require('fs')
 
-exports.postCampeonato = async (name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, file, fileType) => {
+exports.postCampeonato = async (name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, file, fileType, inscricoesAtletas) => {
     try {
         if (!name) {
             return new ResponseDTO('Error', 400, 'Nome não preenchido')
@@ -47,30 +47,15 @@ exports.postCampeonato = async (name, categoria, participantes, vagas, quantidad
         if (file && fileType) {
             const pictureBase64 = `data:image/${fileType};base64,` + file
         
-            const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, pictureBase64)
+            const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, pictureBase64, inscricoesAtletas)
             
             return new ResponseDTO('Success', 200, 'ok', response)
 
         } else {
-            const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao)
+            const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, inscricoesAtletas)
             
             return new ResponseDTO('Success', 200, 'ok', response)
         }
-
-        // if (image) {    
-        //     const data = fs.readFileSync(image.path)
-        //     const pictureBase64 = `data:image/png;base64,${data.toString('base64')}`
-        //     const pictureName   = `${image.filename}`
-
-        //     const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, tipoGrupo, tipoMataMata, pictureName, pictureBase64)
-
-        //     return new ResponseDTO('Success', 200, 'ok', response)
-
-        // } else {
-        //     const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, tipoGrupo, tipoMataMata)
-
-        //     return new ResponseDTO('Success', 200, 'ok', response)
-        // }
 
     } catch (error) {
         console.log(`Erro: ${error}`)
