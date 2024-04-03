@@ -3,6 +3,10 @@ const database = require('../infra/database')
 
 const campeonatoSchema = mongoose.Schema(
     { 
+        inscricoesAtletas: {
+            type: String,
+            default: "aberto"
+        },
         name: {
             type: String,
             required: true
@@ -56,10 +60,6 @@ const campeonatoSchema = mongoose.Schema(
             type: String,
             default: "aberto"
         },
-        inscricoesAtletas: {
-            type: String,
-            default: "aberto"
-        }
     }
 );
 

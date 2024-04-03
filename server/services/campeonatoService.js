@@ -47,12 +47,12 @@ exports.postCampeonato = async (name, categoria, participantes, vagas, quantidad
         if (file && fileType) {
             const pictureBase64 = `data:image/${fileType};base64,` + file
         
-            const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, pictureBase64, inscricoesAtletas)
+            const response = await campeonatoData.postCampeonato(inscricoesAtletas, name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, pictureBase64)
             
             return new ResponseDTO('Success', 200, 'ok', response)
 
         } else {
-            const response = await campeonatoData.postCampeonato(name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, inscricoesAtletas)
+            const response = await campeonatoData.postCampeonato(inscricoesAtletas, name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao)
             
             return new ResponseDTO('Success', 200, 'ok', response)
         }
