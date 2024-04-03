@@ -8,7 +8,7 @@ const elencoData = require('../data/elencoData')
 const ObjectId = require('mongoose').Types.ObjectId
 const { ResponseDTO } = require('../dtos/Response')
 
-exports.postEstatisticaJogador = async (campeonatoId, jogoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho) => {
+exports.postEstatisticaJogador = async (campeonatoId, jogoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao) => {
     try {
         if (!campeonatoId) {
             return new ResponseDTO('Error', 400, 'Identificador do campeonato não preenchido')
@@ -78,7 +78,7 @@ exports.postEstatisticaJogador = async (campeonatoId, jogoId, teamId, jogadorId,
         const jogadorName = jogador.name
         const teamName = team.teamName
 
-        const response = await estatisticaJogadorData.postEstatisticaJogador(campeonatoId, campeonatoName, jogoId, teamId, teamName, jogadorId, jogadorName, gols, numeroCartoesAmarelo, numeroCartoesVermelho)
+        const response = await estatisticaJogadorData.postEstatisticaJogador(campeonatoId, campeonatoName, jogoId, teamId, teamName, jogadorId, jogadorName, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao)
 
         return new ResponseDTO('Success', 200, 'ok', response)
 

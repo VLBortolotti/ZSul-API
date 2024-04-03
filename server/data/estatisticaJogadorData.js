@@ -1,8 +1,8 @@
 const EstatisticaJogador = require('../models/EstatisticaJogadorModel')
 
-exports.postEstatisticaJogador = async (campeonatoId, campeonatoName, jogoId, teamId, teamName, jogadorId, jogadorName, gols, numeroCartoesAmarelo, numeroCartoesVermelho) => {
+exports.postEstatisticaJogador = async (campeonatoId, campeonatoName, jogoId, teamId, teamName, jogadorId, jogadorName, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao) => {
     const estatisticaJogador = new EstatisticaJogador({
-        campeonatoId, campeonatoName, jogoId, teamId, teamName, jogadorId, jogadorName, gols, numeroCartoesAmarelo, numeroCartoesVermelho
+        campeonatoId, campeonatoName, jogoId, teamId, teamName, jogadorId, jogadorName, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao
     })
 
     return await estatisticaJogador.save()

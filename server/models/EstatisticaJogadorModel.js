@@ -42,6 +42,10 @@ const estatisticaJogadorSchema = mongoose.Schema(
         numeroCartoesVermelho: {
             type: String,
             required: true
+        },
+        punicao: {
+            type: String,
+            default: null
         }
     }
 );

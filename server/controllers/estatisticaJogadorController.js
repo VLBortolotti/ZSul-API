@@ -1,9 +1,9 @@
 const estatisticaJogadorService = require('../services/estatisticaJogadorService')
 
 exports.postEstatisticaJogador = async (req, res, next) => {
-    const { campeonatoId, jogoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho } = req.body
+    const { campeonatoId, jogoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao } = req.body
 
-    const response = await estatisticaJogadorService.postEstatisticaJogador(campeonatoId, jogoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho)
+    const response = await estatisticaJogadorService.postEstatisticaJogador(campeonatoId, jogoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao)
 
     response.sendResponse(res)
 } 
