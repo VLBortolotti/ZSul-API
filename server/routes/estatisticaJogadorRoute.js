@@ -9,6 +9,7 @@ router.patch('/jogador', estatisticaJogadorController.getEstatisticaJogadorById)
 
 router.get('/campeonato/:id', estatisticaJogadorController.getEstatisticaJogadorByCampeonatoId)
 router.get('/jogo/:id', estatisticaJogadorController.getEstatisticaJogoById)
+router.get('/punidos', estatisticaJogadorController.getAllEstatisticasJogadoresPunidos)
 router.get('/:id', estatisticaJogadorController.getAllEstatisticaByJogadorId)
 router.get('/', estatisticaJogadorController.getAllEstatisticas)
 

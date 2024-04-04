@@ -272,6 +272,18 @@ exports.getEstatisticaJogadorByCampeonatoId = async (id) => {
     }
 }
 
+exports.getAllEstatisticasJogadoresPunidos = async () => {
+    try {
+        const response = await estatisticaJogadorData.getAllEstatisticasJogadoresPunidos()
+
+        return new ResponseDTO('Success', 200, 'ok', response)
+
+    } catch (error) {
+        console.log(`Erro: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
+    }
+}
+
 exports.updateEstatisticaById = async (id, field, value) => {
     try {
         if (!id) {

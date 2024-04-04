@@ -49,6 +49,12 @@ exports.getEstatisticaJogadorByCampeonatoId = async (req, res, next) => {
     response.sendResponse(res)
 }
 
+exports.getAllEstatisticasJogadoresPunidos = async (req, res, next) => {
+    const response = await estatisticaJogadorService.getAllEstatisticasJogadoresPunidos()
+
+    response.sendResponse(res)
+}
+
 exports.updateEstatisticaById = async (req, res, next) => {
     const { field, value } = req.body
     const { id }   = req.params
