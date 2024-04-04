@@ -59,10 +59,10 @@ exports.updateElencoStatus = async (status) => {
             return new ResponseDTO('Error', 404, 'Não existe um status de elenco cadastrado')
         }
 
-        elencoStatus[status] = status
-        await elencoStatus.validate()
-        await elencoStatus.save()
+        const newElencoStatus  = await ElencoStatusModel.findOneAndUpdate({ }, { status: status })
 
+        await newElencoStatus.save()
+        
         const response = await elencoStatusData.getElencoStatus()
 
         return new ResponseDTO('Success', 200, 'ok', response)
