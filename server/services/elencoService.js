@@ -7,6 +7,11 @@ const usersData        = require('../data/usersData')
 const { ResponseDTO }  = require('../dtos/Response')
 const fs = require('fs')
 
+const SumulaModel = require('../models/SumulaModel')
+const EstatisticaJogadorModel = require('../models/EstatisticaJogadorModel')
+const SumulaPermissaoModel    = require('../models/SumulaPermissaoModel')
+const TransferenciaModel      = require('../models/TransferenciaModel')
+
 exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, currentDate) => {
     try {
         if (!teamId) {
@@ -276,6 +281,16 @@ exports.updateAthleteById = async (id, field, value) => {
             const response = await elencoData.getAthleteById(id)
 
             return new ResponseDTO('Success', 200, 'ok', response)
+        }
+
+        if (field == 'name') {
+            await SumulaModel.updateMany({ elencoId: id }, { $set: { elencoName: value } })
+
+            await EstatisticaJogadorModel.updateMany({ jogadorId: id }, { $set: { jogadorName: value } })
+
+            await SumulaPermissaoModel.updateMany({ elencoId: id }, { $set: { elencoName: value } })
+
+            await TransferenciaModel.updateMany({ jogadorId: id }, { $set: { jogadorNome: value } })
         }
 
         athlete[field] = value

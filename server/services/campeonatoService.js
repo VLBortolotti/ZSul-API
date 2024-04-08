@@ -6,6 +6,12 @@ const ObjectId        = require('mongoose').Types.ObjectId;
 const campeonatoData  = require('../data/campeonatoData')
 const fs = require('fs')
 
+const EstatisticaJogadorModel = require('../models/EstatisticaJogadorModel')
+const SumulaPermissaoModel    = require('../models/SumulaPermissaoModel')
+const InscricaoModel = require('../models/InscricaoModel')
+const SumulaModel    = require('../models/SumulaModel')
+const JogoModel = require('../models/JogoModel')
+
 exports.postCampeonato = async (name, categoria, participantes, vagas, quantidadeGrupos, dataInicio, cidade, tipoCompeticao, file, fileType, inscricoesAtletas) => {
     try {
         if (!name) {
@@ -117,6 +123,18 @@ exports.updateCampeonatoById = async (id, field, value) => {
 
         if (!campeonato) {
             return new ResponseDTO('Error', 404, 'Campeonato com este identificador não encontrado')
+        }
+
+        if (field == 'name') {
+            await EstatisticaJogadorModel.updateMany({ campeonatoId: id }, { $set: {campeonatoName: value} })
+
+            await SumulaPermissaoModel.updateMany({ campeonatoId: id }, { $set: {campeonatoName: value} })
+
+            await InscricaoModel.updateMany({ campeonatoId: id }, { $set: {campeonatoName: value} })
+
+            await SumulaModel.updateMany({ campeonatoId: id }, { $set: {campeonatoName: value} })
+
+            await JogoModel.updateMany({ campeonatoId: id }, { $set: {campeonatoName: value} })
         }
 
         campeonato[field] = value

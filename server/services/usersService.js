@@ -5,7 +5,15 @@ const { ResponseDTO } = require('../dtos/Response')
 const usersData       = require('../data/usersData')
 
 const ObjectId  = require('mongoose').Types.ObjectId
-const UserModel = require('../models/UserModel')
+
+const UserModel            = require('../models/UserModel')
+const SumulaModel          = require('../models/SumulaModel')
+const JogoModel            = require('../models/JogoModel')
+const InscricaoModel       = require('../models/InscricaoModel')
+const TransferenciaModel   = require('../models/TransferenciaModel')
+const SumulaPermissaoModel = require('../models/SumulaPermissaoModel')
+const EstatisticaJogoModel = require('../models/EstatisticaJogoModel')
+const EstatisticaJogadorModel = require('../models/EstatisticaJogadorModel')
 
 exports.postUser = async (teamName, email, password, confirmPassword, city, state) => {
     try {
@@ -262,14 +270,34 @@ exports.updateUserById = async (id, userIdRequesting, field, value) => {
             return new ResponseDTO('Error', 404, 'Usuário que está realizando a requisição não encontrado.')
         }
 
+        
         if (field == 'permission' && userRequesting.permission != 'admin') {
             return new ResponseDTO('Error', 400, 'Usuário não tem permissão para modificar a permissão de outros usuários')
         }
-
+        
         user[field] = value
-
+        
         await user.validate()
         await user.save()
+        
+        if (field == 'teamName') {
+            await SumulaModel.updateMany({ userId: id }, { $set: {userName: value} })
+
+            await JogoModel.updateMany({ userIdCasa: id }, { $set: {userCasaName: value} })
+            await JogoModel.updateMany({ userIdFora: id }, { $set: {userForaName: value} })
+
+            await TransferenciaModel.updateMany({ timeAtualId: id }, { $set: {nomeTime: value} })
+
+            await InscricaoModel.updateMany({ userId: id }, { $set: {userName: value} })
+
+            await EstatisticaJogoModel.updateMany({ userCasaId: id }, { $set: {userCasaNome: value} })
+
+            await EstatisticaJogoModel.updateMany({ userForaId: id }, { $set: {userForaNome: value} })
+
+            await SumulaPermissaoModel.updateMany({ userId: id }, { $set: {userName: value} })
+
+            await EstatisticaJogadorModel.updateMany({ teamId: id }, { $set: {teamName: value} })
+        }
 
         const response = await usersData.getUserById(id)
 

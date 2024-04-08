@@ -182,7 +182,21 @@ exports.deleteInscricaoById = async (id) => {
             return new ResponseDTO('Error', 404, 'Inscrição com este identificador não existente')
         }
 
+        const campeonatoId = inscricao.campeonatoId
+        if (!campeonatoId) {
+            return new ResponseDTO('Error', 404, 'Não foi possível encontrar o identificador do campeonato desta inscrição')
+        }
+
+        const campeonato = await campeonatoData.getCampeonatoById(campeonatoId)
+        if (!campeonato) {
+            return new ResponseDTO('Error', 404, 'Não foi possível encontrar o campeonato desta inscrição')
+        }
+
         const response = await inscricoesData.deleteInscricaoById(id)
+        campeonato.participantes = parseInt(campeonato.participantes) - 1
+        campeonato.vagas = parseInt(campeonato.vagas) + 1
+
+        await campeonato.save()
         
         return new ResponseDTO('Success', 200, 'ok', response)
 
