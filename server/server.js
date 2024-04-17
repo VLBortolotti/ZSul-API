@@ -25,6 +25,8 @@ app.use('/estatistica', require('./routes/estatisticaRoute'))
 app.use('/estatistica/jogador', require('./routes/estatisticaJogadorRoute'))
 app.use('/transferencia', require('./routes/transferenciaRoute'))
 app.use('/campos', require('./routes/campoRoute'))
+app.use('/blog', require('./routes/blogRoute'))
+app.use('/fotografo', require('./routes/fotografoRoute'))
 
 app.listen(PORT, (error) => {
     error ? console.log(error) : console.log(`Rodando na porta: ${PORT}`) 
