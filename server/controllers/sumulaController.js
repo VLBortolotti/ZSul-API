@@ -57,7 +57,7 @@ exports.exportSumulaByTeamAndCampeonatoId = async (req, res, next) => {
     const response = await sumulaService.exportSumulaByTeamAndCampeonatoId(teamId, campeonatoId)
 
     if (response.message !== 'ok') {
-        res.status(response.status).json({ status: response.status, msg: response.message })
+        res.status(response.status).json({ status: response.status, msg: response.message, erro: response.message, data: null })
     }
     
     const filePath = path.resolve(__dirname, '..', response.data)
