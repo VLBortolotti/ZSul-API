@@ -250,6 +250,25 @@ exports.updateAthleteById = async (id, field, value) => {
             return new ResponseDTO('Error', 400, 'Valor não preenchido')
         }
 
+        if (field == "dateOfBirth") {
+            // formato: dia/mes/ano
+            const currentDate = new Date().getFullYear()
+            const yearOfBirth = value.split("/")[2]
+        
+            const athleteAge  = parseInt(currentDate) - parseInt(yearOfBirth)
+
+            // athlete[category] = athleteAge
+
+            // await athlete.validate()
+            // await athlete.save()
+
+            console.log(`athleteAge: ${athleteAge}`)
+
+            const response = await elencoData.getAthleteById(id)
+
+            return new ResponseDTO('Success', 200, 'ok', response)
+        }
+
         if (field == "documentNumber") {
             let documentField;
 
