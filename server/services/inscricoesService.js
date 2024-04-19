@@ -34,6 +34,11 @@ exports.postInscricao = async (userId, campeonatoId) => {
             return new ResponseDTO('Error', 400, 'Campeonato com este identificador não existente')
         }
 
+        const campeonatoStatus = campeonato.status
+        if (campeonatoStatus !== 'aberto') {
+            return new ResponseDTO('Error', 400, `O status atual deste campeonato é ${campeonatoStatus}`)
+        }
+
         if (await inscricoesData.getInscricaoByUserIdAndCampeonatoId(userId, campeonatoId)) {
             return new ResponseDTO('Error', 400, 'Usuário já inscrito neste campeonato')
         }
