@@ -66,16 +66,6 @@ exports.postAthlete = async (teamId, name, dateOfBirth, documentNumber, school, 
 
             return new ResponseDTO('Success', 200, 'ok', response)
 
-        } else if (documentNumber.length === 32) {
-            const findAthleteByTeamId = await elencoData.getAthleteCertidaoByTeamId(documentNumber, teamId)
-            if (Object.keys(findAthleteByTeamId).length >= 1) {
-                return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado neste time')
-            } 
-
-            const response = await elencoData.postAthlete(teamId, name, dateOfBirth, RG=null, CPF=null, certidaoNascimento=documentNumber, school, athleteAge)
-            
-            return new ResponseDTO('Success', 200, 'ok', response)
-
         } else {
             const findAthleteByTeamId = await elencoData.getAthleteRGByTeamId(documentNumber, teamId)
             if (Object.keys(findAthleteByTeamId).length >= 1) {
