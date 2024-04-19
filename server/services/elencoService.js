@@ -257,12 +257,11 @@ exports.updateAthleteById = async (id, field, value) => {
         
             const athleteAge  = parseInt(currentDate) - parseInt(yearOfBirth)
 
-            // athlete[category] = athleteAge
-
-            // await athlete.validate()
-            // await athlete.save()
-
-            console.log(`athleteAge: ${athleteAge}`)
+            athlete.category    = athleteAge
+            athlete.dateOfBirth = value
+            
+            await athlete.validate()
+            await athlete.save()
 
             const response = await elencoData.getAthleteById(id)
 
