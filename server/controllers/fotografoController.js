@@ -1,9 +1,9 @@
 const fotografoService = require('../services/fotografoService')
 
 exports.postFotografo = async (req, res, next) => {
-    const { titulo, foto, nome, instagram } = req.body
+    const { titulo, foto, tipoFoto, nome, instagram } = req.body
 
-    const response = await fotografoService.postFotografo(titulo, foto, nome, instagram)
+    const response = await fotografoService.postFotografo(titulo, foto, tipoFoto, nome, instagram)
 
     response.sendResponse(res)
 }

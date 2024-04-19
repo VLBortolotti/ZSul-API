@@ -3,7 +3,7 @@ const { ResponseDTO } = require('../dtos/Response')
 const ObjectId        = require('mongoose').Types.ObjectId;
 const fotografoData   = require('../data/fotografoData')
 
-exports.postFotografo = async (titulo, foto, nome, instagram) => {
+exports.postFotografo = async (titulo, foto, tipoFoto, nome, instagram) => {
     try {
         if (!titulo) {
             return new ResponseDTO('Error', 400, 'Título não preenchido')
@@ -11,6 +11,10 @@ exports.postFotografo = async (titulo, foto, nome, instagram) => {
 
         if (!foto) {
             return new ResponseDTO('Error', 400, 'Foto não preenchida')
+        }
+
+        if (!tipoFoto) {
+            return new ResponseDTO('Error', 400, 'Extensão da foto não preenchida')
         }
 
         if (!nome) {
@@ -21,7 +25,9 @@ exports.postFotografo = async (titulo, foto, nome, instagram) => {
             return new ResponseDTO('Error', 400, 'Instagram não preenchido')
         }
 
-        const response = await fotografoData.postFotografo(titulo, foto, nome, instagram)
+        const dataUrl = `data:image/${tipoFoto};base64,` + foto
+
+        const response = await fotografoData.postFotografo(titulo, dataUrl, nome, instagram)
 
         return new ResponseDTO('Success', 200, 'ok', response)
 

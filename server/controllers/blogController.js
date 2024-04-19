@@ -1,9 +1,9 @@
 const blogsService = require('../services/blogService')
 
 exports.postBlog = async (req, res, next) => {
-    const { titulo, subtitulo, texto, imagem } = req.body
+    const { titulo, subtitulo, texto, imagem, tipoImagem } = req.body
 
-    const response = await blogsService.postBlog(titulo, subtitulo, texto, imagem)
+    const response = await blogsService.postBlog(titulo, subtitulo, texto, imagem, tipoImagem)
 
     response.sendResponse(res)
 }

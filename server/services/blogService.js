@@ -3,7 +3,7 @@ const { ResponseDTO } = require('../dtos/Response')
 const ObjectId        = require('mongoose').Types.ObjectId;
 const blogData        = require('../data/blogData')
 
-exports.postBlog = async (titulo, subtitulo, texto, imagem) => {
+exports.postBlog = async (titulo, subtitulo, texto, imagem, tipoImagem) => {
     try {
         if (!titulo) {
             return new ResponseDTO('Error', 400, 'Título não preenchido')
@@ -21,7 +21,13 @@ exports.postBlog = async (titulo, subtitulo, texto, imagem) => {
             return new ResponseDTO('Error', 400, 'Imagem não preenchida')
         }
 
-        const response = await blogData.postBlog(titulo, subtitulo, texto, imagem)
+        if (!tipoImagem) {
+            return new ResponseDTO('Error', 400, 'Extensão da imagem não preenchida')
+        }
+
+        const dataUrl = `data:image/${tipoImagem};base64,` + imagem
+
+        const response = await blogData.postBlog(titulo, subtitulo, texto, dataUrl)
 
         return new ResponseDTO('Success', 200, 'ok', response)
 
