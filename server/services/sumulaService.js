@@ -8,6 +8,10 @@ const SumulaModel = require('../models/SumulaModel')
 const ObjectId    = require('mongoose').Types.ObjectId
 const { ResponseDTO } = require('../dtos/Response')
 
+const fs    = require('fs')
+const path  = require('path')
+const Excel = require('exceljs')
+
 exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
     try {
         if (!status) {
@@ -283,6 +287,85 @@ exports.precoSumulaByTeamAndCampeonatoId = async (teamId, campeonatoId) => {
 
         return new ResponseDTO('Success', 200, 'ok', precoTotal)
 
+    } catch (error) {
+        console.log(`Erro: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
+    }
+}
+
+exports.exportSumulaByTeamAndCampeonatoId = async (teamId, campeonatoId) => {
+    try {
+        if (!campeonatoId) {
+            return new ResponseDTO('Error', 400, 'Identificador do campeonato não preenchido')
+        }
+
+        if (!ObjectId.isValid(campeonatoId)) {
+            return new ResponseDTO('Error', 400, 'Identificador do campeonato não é válido')
+        }
+
+        const campeonato = await campeonatoData.getCampeonatoById(campeonatoId)
+        if (!campeonato) {
+            return new ResponseDTO('Error', 400, 'Campeonato com este identificador não existente')
+        }
+
+        if (!teamId) {
+            return new ResponseDTO('Error', 400, 'Identificador do usuário (time) não preenchido')
+        }
+
+        if (!ObjectId.isValid(teamId)) {
+            return new ResponseDTO('Error', 400, 'Identificador do usuário (time) não é válido')
+        }
+
+        const team = await usersData.getUserById(teamId)
+        if (!team) {
+            return new ResponseDTO('Error', 400, 'Usuário (time) com este identificador não existente')
+        }
+
+        const allSumula = await sumulaData.getSumulaByCampeonatoUserId(campeonatoId, teamId)
+        if (!allSumula) {
+            return new ResponseDTO('Error', 400, 'Não foi possível encontrar a súmula deste time neste campeonato')
+        }
+
+        const allSumulaCount = await sumulaData.countAllSumulasByCampeonatoAndUserId(campeonatoId, teamId)
+
+        if (!allSumulaCount) {
+            return new ResponseDTO('Error', 404, 'Não foi possível computar a quantidade total de atletas na súmula deste time')
+        }
+
+        const precoTotal = parseFloat(allSumulaCount) * 35
+
+        // Limpando a public/tabelas de todos os arquivos 
+        const folderPath = path.join('public', 'tabelas');
+        fs.readdirSync(folderPath).forEach((file) => {
+            const filePath = path.join(folderPath, file);
+            fs.unlinkSync(filePath);
+        });
+
+        const workbook  = new Excel.Workbook()
+        const worksheet = workbook.addWorksheet('Sumula')
+
+        // Adicione cabeçalhos à planilha
+        worksheet.addRow(['Nome do Campeonato', 'Nome do Usuário', 'Nome do Elenco', 'Documento do Elenco', 'Status', 'Preço total']);
+        
+        // Adicione os dados da súmula à planilha
+        allSumula.forEach((sumula) => {
+            worksheet.addRow([
+                sumula.campeonatoName,
+                sumula.userName,
+                sumula.elencoName,
+                sumula.elencoDocumento,
+                sumula.status,
+                precoTotal
+            ]);
+        });
+
+        // Salve o arquivo Excel
+        const filePath = path.join('public', 'tabelas', `Sumula-${allSumula[0].campeonatoName}-${allSumula[0].userName}.xlsx`)
+        await workbook.xlsx.writeFile(filePath)
+
+        const response = [filePath, precoTotal, allSumulaCount, allSumula]
+        return new ResponseDTO('Success', 200, 'ok', filePath)
+        
     } catch (error) {
         console.log(`Erro: ${error}`)
         return new ResponseDTO('Error', 500, 'Erro no servidor')

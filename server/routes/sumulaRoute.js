@@ -10,6 +10,7 @@ router.get('/elenco/:id', sumulaController.getSumulaByElencoId)
 router.get('/', sumulaController.getAllSumulas)
 router.get('/:id', sumulaController.getSumulaById)
 
+router.patch('/export', sumulaController.exportSumulaByTeamAndCampeonatoId)
 router.patch('/preco', sumulaController.precoSumulaByTeamAndCampeonatoId)
 router.patch('/:id', sumulaController.updateSumulaById)
 

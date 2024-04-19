@@ -1,4 +1,5 @@
 const sumulaService = require('../services/sumulaService')
+const path = require('path')
 
 exports.postSumula = async (req, res, next) => {
     const { campeonatoId, userId, elencoId, status } = req.body
@@ -48,6 +49,20 @@ exports.precoSumulaByTeamAndCampeonatoId = async (req, res, next) => {
     const response = await sumulaService.precoSumulaByTeamAndCampeonatoId(teamId, campeonatoId)
 
     response.sendResponse(res)
+}
+
+exports.exportSumulaByTeamAndCampeonatoId = async (req, res, next) => {
+    const { teamId, campeonatoId } = req.body
+    
+    const response = await sumulaService.exportSumulaByTeamAndCampeonatoId(teamId, campeonatoId)
+
+    if (response.message !== 'ok') {
+        res.status(response.status).send(response.message)
+    }
+    
+    const filePath = path.resolve(__dirname, '..', response.data)
+    
+    res.status(200).sendFile(filePath)
 }
 
 exports.updateSumulaById = async (req, res, next) => {
