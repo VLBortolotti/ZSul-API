@@ -1,4 +1,6 @@
-const fs = require('fs')
+const path = require('path')
+const fs   = require('fs')
+
 const secret          = process.env.SECRET
 const { ResponseDTO } = require('../dtos/Response')
 const ObjectId        = require('mongoose').Types.ObjectId;
@@ -55,6 +57,19 @@ exports.postImage = async (userId, userType, imageField, image) => {
 
             await user.validate()
             await user.save()
+
+            // Arquivo Pivot
+            const arquivoPivot = 'arquivoPivot.png'
+
+            // Limpando a public/images de todos os arquivos 
+            const folderPath = path.join('public', 'images');
+            fs.readdirSync(folderPath).forEach((file) => {
+                const filePath = path.join(folderPath, file);
+
+                if (file !== arquivoPivot) {
+                    fs.unlinkSync(filePath);
+                }
+            });
         
             const response = await elencoData.getAthleteById(userId)
 
@@ -67,7 +82,7 @@ exports.postImage = async (userId, userType, imageField, image) => {
             if (!user) {
                 return new ResponseDTO('Error', 404, 'Usuário com este identificador não existente')
             }
-
+            
             const imageExtension = image.mimetype.split('/')[1]
             const data = fs.readFileSync(image.path)
             const dataUrl = `data:image/${imageExtension};base64,${data.toString('base64')}`
@@ -79,6 +94,19 @@ exports.postImage = async (userId, userType, imageField, image) => {
             await user.validate()
             await user.save()
         
+            // Arquivo Pivot
+            const arquivoPivot = 'arquivoPivot.png'
+
+            // Limpando a public/images de todos os arquivos 
+            const folderPath = path.join('public', 'images');
+            fs.readdirSync(folderPath).forEach((file) => {
+                const filePath = path.join(folderPath, file);
+
+                if (file !== arquivoPivot) {
+                    fs.unlinkSync(filePath);
+                }
+            });
+
             const response = await usersData.getUserById(userId)
 
             return new ResponseDTO('Success', 200, 'ok', response)
@@ -105,6 +133,19 @@ exports.postImage = async (userId, userType, imageField, image) => {
             await user.validate()
             await user.save()
         
+            // Arquivo Pivot
+            const arquivoPivot = 'arquivoPivot.png'
+
+            // Limpando a public/images de todos os arquivos 
+            const folderPath = path.join('public', 'images');
+            fs.readdirSync(folderPath).forEach((file) => {
+                const filePath = path.join(folderPath, file);
+
+                if (file !== arquivoPivot) {
+                    fs.unlinkSync(filePath);
+                }
+            });
+
             const response = await staffData.getStaffById(userId)
 
             return new ResponseDTO('Success', 200, 'ok', response)
@@ -130,6 +171,19 @@ exports.postImage = async (userId, userType, imageField, image) => {
 
             await campeonato.validate()
             await campeonato.save()
+
+            // Arquivo Pivot
+            const arquivoPivot = 'arquivoPivot.png'
+
+            // Limpando a public/images de todos os arquivos 
+            const folderPath = path.join('public', 'images');
+            fs.readdirSync(folderPath).forEach((file) => {
+                const filePath = path.join(folderPath, file);
+
+                if (file !== arquivoPivot) {
+                    fs.unlinkSync(filePath);
+                }
+            });
         
             const response = await campeonatoData.getCampeonatoById(userId)
 
@@ -138,7 +192,7 @@ exports.postImage = async (userId, userType, imageField, image) => {
 
         // const response = await imageData.postImage(userId, userType, imageField, imageName, imagePath)
 
-        // return new ResponseDTO('Success', 200, 'Ok', response)
+        return new ResponseDTO('Error', 404, 'Este tipo de usuário não existe no sistema')
 
     } catch(error) {
         console.log(`Error: ${error}`)
