@@ -320,7 +320,7 @@ exports.exportSumulaByTeamAndCampeonatoId = async (teamId, campeonatoId) => {
         if (!team) {
             return new ResponseDTO('Error', 400, 'Usuário (time) com este identificador não existente')
         }
-
+        
         const allSumula = await sumulaData.getSumulaByCampeonatoUserId(campeonatoId, teamId)
         if (!allSumula) {
             return new ResponseDTO('Error', 400, 'Não foi possível encontrar a súmula deste time neste campeonato')
