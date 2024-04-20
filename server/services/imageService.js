@@ -8,7 +8,7 @@ const elencoData      = require('../data/elencoData')
 const imageData       = require('../data/imageData')
 const campeonatoData  = require('../data/campeonatoData')
 
-exports.postImage = async (userId, userType, imageField, file, fileType) => {
+exports.postImage = async (userId, userType, imageField, image) => {
     try {
         if (!userId) {
             return new ResponseDTO('Error', 400, 'Identificador do usuário não preenchido')
@@ -28,7 +28,7 @@ exports.postImage = async (userId, userType, imageField, file, fileType) => {
             return new ResponseDTO('Error', 400, 'Campo ao qual a imagem pertence não preenchido')
         }
 
-        if (!file || !fileType) {
+        if (!image) {
             return new ResponseDTO('Error', 400, 'Imagem não preenchida')
         }
 
@@ -45,10 +45,11 @@ exports.postImage = async (userId, userType, imageField, file, fileType) => {
 
             const imageFieldBase64 = imageField + 'Base64'
 
-            // const data = fs.readFileSync(image.path)
-            // const dataUrl = `data:image/png;base64,${data.toString('base64')}`
+            const imageExtension = image.mimetype.split('/')[1]
+            const data = fs.readFileSync(image.path)
+            const dataUrl = `data:image/${imageExtension};base64,${data.toString('base64')}`
 
-            const dataUrl = `data:image/${fileType};base64,` + file
+            // const dataUrl = `data:image/${fileType};base64,` + file
 
             user[imageFieldBase64] = dataUrl
 
@@ -67,10 +68,11 @@ exports.postImage = async (userId, userType, imageField, file, fileType) => {
                 return new ResponseDTO('Error', 404, 'Usuário com este identificador não existente')
             }
 
-            // const data = fs.readFileSync(image.path)
-            // const dataUrl = `data:image/png;base64,${data.toString('base64')}`
+            const imageExtension = image.mimetype.split('/')[1]
+            const data = fs.readFileSync(image.path)
+            const dataUrl = `data:image/${imageExtension};base64,${data.toString('base64')}`
 
-            const dataUrl = `data:image/${fileType};base64,` + file
+            // const dataUrl = `data:image/${fileType};base64,` + file
 
             user.pictureBase64 = dataUrl
 
@@ -93,8 +95,11 @@ exports.postImage = async (userId, userType, imageField, file, fileType) => {
             // const dataUrl = `data:image/png;base64,${data.toString('base64')}`
 
             // user[imageField]     = imagePath
+
+            const imageExtension = image.mimetype.split('/')[1]
+            const data = fs.readFileSync(image.path)
+            const dataUrl = `data:image/${imageExtension};base64,${data.toString('base64')}`
             
-            const dataUrl = `data:image/${fileType};base64,` + file
             user.fotoStaffBase64 = dataUrl
 
             await user.validate()
@@ -116,8 +121,11 @@ exports.postImage = async (userId, userType, imageField, file, fileType) => {
             // const dataUrl = `data:image/png;base64,${data.toString('base64')}`
 
             // user[imageField]     = imagePath
+
+            const imageExtension = image.mimetype.split('/')[1]
+            const data = fs.readFileSync(image.path)
+            const dataUrl = `data:image/${imageExtension};base64,${data.toString('base64')}`
             
-            const dataUrl = `data:image/${fileType};base64,` + file
             campeonato.pictureBase64 = dataUrl
 
             await campeonato.validate()
