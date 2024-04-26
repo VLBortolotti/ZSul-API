@@ -82,8 +82,6 @@ exports.postEstatisticaJogador = async (campeonatoId, jogoId, teamId, jogadorId,
         const jogadorName = jogador.name
         const teamName = team.teamName
         
-
-        console.log(campeonatoId, jogoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao)
         const response = await estatisticaJogadorData.postEstatisticaJogador(campeonatoId, campeonatoName, jogoId, teamId, teamName, jogadorId, jogadorName, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao)
         let response2;
 

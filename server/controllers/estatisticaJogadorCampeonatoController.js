@@ -1,14 +1,14 @@
 const estatisticaJogadorCampeonatoService = require('../services/estatisticaJogadorCampeonatoService')
 
-// exports.postEstatisticaJogadorCampeonato = async (req, res, next) => {
-//     const { 
-//         campeonatoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao 
-//     } = req.body
+exports.postEstatisticaJogadorCampeonato = async (req, res, next) => {
+    const { 
+        campeonatoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao 
+    } = req.body
 
-//     const response = await estatisticaJogadorCampeonatoService.postEstatisticaJogadorCampeonato(campeonatoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao)
+    const response = await estatisticaJogadorCampeonatoService.postEstatisticaJogadorCampeonato(campeonatoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao)
 
-//     response.sendResponse(res)
-// }
+    response.sendResponse(res)
+}
 
 exports.getEstatisticaJogadorCampeonatoByTeamId = async (req, res, next) => {
     const { campeonatoId, teamId } = req.body

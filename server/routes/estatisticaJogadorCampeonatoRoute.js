@@ -2,7 +2,7 @@ const express = require('express')
 const router  = express.Router()
 const estatisticaJogadorCampeonatoController = require('../controllers/estatisticaJogadorCampeonatoController')
 
-// router.post('/', estatisticaJogadorCampeonatoController.postEstatisticaJogadorCampeonato)
+router.post('/', estatisticaJogadorCampeonatoController.postEstatisticaJogadorCampeonato)
 
 router.patch('/time', estatisticaJogadorCampeonatoController.getEstatisticaJogadorCampeonatoByTeamId)
 router.patch('/jogador', estatisticaJogadorCampeonatoController.getEstatisticaJogadorCampeonatoByJogadorId)
