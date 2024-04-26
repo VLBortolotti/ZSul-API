@@ -44,6 +44,10 @@ exports.deleteEstatisticaById = async (id) => {
     return await EstatisticaJogador.deleteOne({ _id: id })
 }
 
+exports.deleteAllEstatisticaJogadorByJogadorId = async (jogadorId) => {
+    return await EstatisticaJogador.deleteMany({ jogadorId: jogadorId })
+}
+
 exports.cleanDatabase = async () => {
     return await EstatisticaJogador.deleteMany({  })
 }

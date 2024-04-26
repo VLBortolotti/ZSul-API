@@ -1,5 +1,9 @@
 const EstatisticaJogadorModel = require('../models/EstatisticaJogadorModel')
 const estatisticaJogadorData  = require('../data/estatisticaJogadorData')
+
+const EstatisticaJogadorCampeonatoModel = require('../models/EstatisticaJogadorCampeonatoModel')
+const estatisticaJogadorCampeonatoData  = require('../data/estatisticaJogadorCampeonatoData')
+
 const campeonatoData = require('../data/campeonatoData')
 const jogosData  = require('../data/jogosData')
 const usersData  = require('../data/usersData')
@@ -77,8 +81,38 @@ exports.postEstatisticaJogador = async (campeonatoId, jogoId, teamId, jogadorId,
         const campeonatoName = campeonato.name
         const jogadorName = jogador.name
         const teamName = team.teamName
+        
 
+        console.log(campeonatoId, jogoId, teamId, jogadorId, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao)
         const response = await estatisticaJogadorData.postEstatisticaJogador(campeonatoId, campeonatoName, jogoId, teamId, teamName, jogadorId, jogadorName, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao)
+        let response2;
+
+        const estatisticaJogadorCampeonato = await estatisticaJogadorCampeonatoData.getEstatisticaJogadorCampeonatoByCampeonatoIdAndJogadorId(campeonatoId, jogadorId)
+        // console.log(Object.keys(estatisticaJogadorCampeonato).length)
+        if (estatisticaJogadorCampeonato) {
+            // pegar os dados da estatistica
+            // salvar um novo com os dados atualizados
+            // deletar pelo _id
+            
+            newEstatisticaPunicao = punicao
+            newEstatisticaGols = parseInt(estatisticaJogadorCampeonato.gols) + parseInt(gols)
+            
+            newEstatisticaNumeroCartoesAmarelo  = parseInt(estatisticaJogadorCampeonato.numeroCartoesAmarelo) + parseInt(numeroCartoesAmarelo)
+            
+            newEstatisticaNumeroCartoesVermelho = parseInt(estatisticaJogadorCampeonato.numeroCartoesVermelho) + parseInt(numeroCartoesVermelho)
+            
+            // deletando antiga estatisticaJogadorCampeonatoId
+            const estatisticaJogadorCampeonatoId = estatisticaJogadorCampeonato._id
+            // console.log(`estatisticaJogadorCampeonatoId: ${estatisticaJogadorCampeonatoId[0]}`)
+            await estatisticaJogadorCampeonatoData.deleteEstatisticaJogadorCampeonatoById(estatisticaJogadorCampeonatoId)
+            
+            // criando uma nova estatisticaJogadorCampeonatoId
+            const response2 = await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, teamId, teamName, jogadorId, jogadorName, newEstatisticaGols, newEstatisticaNumeroCartoesAmarelo, newEstatisticaNumeroCartoesVermelho, punicao)
+            
+        } else if (!estatisticaJogadorCampeonato) {
+            const response2 = await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, teamId, teamName, jogadorId, jogadorName, gols, numeroCartoesAmarelo, numeroCartoesVermelho, punicao)
+
+        }
 
         return new ResponseDTO('Success', 200, 'ok', response)
 
