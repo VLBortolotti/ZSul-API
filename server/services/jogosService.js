@@ -1,4 +1,7 @@
-const campeonatoData = require('../data/campeonatoData')
+const estatisticaJogadorCampeonatoData = require('../data/estatisticaJogadorCampeonatoData')
+const estatisticaJogadorData = require('../data/estatisticaJogadorData')
+const campeonatoData  = require('../data/campeonatoData')
+const estatisticaData = require('../data/estatisticaData')
 const jogosData = require('../data/jogosData')
 const usersData = require('../data/usersData')
 const grupoData = require('../data/grupoData')
@@ -271,7 +274,83 @@ exports.deleteJogoById = async (id) => {
             return new ResponseDTO('Error', 400, 'Identificador do jogo não é válido')
         }
 
-        const response = await jogosData.deleteJogoById(id)
+        const jogo = await jogosData.getJogoById(id)
+        if (!jogo) {
+            return new ResponseDTO('Error', 404, 'Jogo com este identificador não encontrado')
+        }
+
+        const estatisticaJogo = await estatisticaData.getEstatisticaJogoById(id)
+        const jogoVencedorId  = estatisticaJogo['vencedor']
+
+        const userCasaId = jogo['userIdCasa']
+        const userCasa   = await usersData.getUserById(userCasaId)
+
+        const userForaId = jogo['userIdFora']
+        const userFora   = await usersData.getUserById(userForaId)
+
+        // Verificando qual time ganhou (casa, fora ou empate)
+        if (jogoVencedorId == userForaId) {
+            userFora['numeroJogos'] = parseInt(userFora['numeroJogos']) - 1
+            userFora['vitorias'] = parseInt(userFora['vitorias']) - 1
+            userFora['golsFeitos'] = parseInt(userFora['golsFeitos']) - parseInt(estatisticaJogo['userForaGols'])
+            userFora['golsSofridos'] = parseInt(userFora['golsSofridos']) - parseInt(estatisticaJogo['userCasaGols'])
+            userFora['saldoGols'] = parseInt(userFora['golsFeitos']) - parseInt(userFora['golsSofridos'])
+            userFora['pontos'] = ( parseInt(userFora['vitorias']) * 3 ) + parseInt(userFora['empates']) 
+
+            userCasa['numeroJogos'] = parseInt(userCasa['numeroJogos']) - 1
+            userCasa['derrotas'] = parseInt(userCasa['derrotas']) - 1
+            userCasa['golsFeitos'] = parseInt(userCasa['golsFeitos']) - parseInt(estatisticaJogo['userCasaGols'])
+            userCasa['golsSofridos'] = parseInt(userCasa['golsSofridos']) - parseInt(estatisticaJogo['userForaGols'])
+            userCasa['saldoGols'] = parseInt(userCasa['golsFeitos']) - parseInt(userCasa['golsSofridos'])
+            userCasa['pontos'] = ( parseInt(userCasa['vitorias']) * 3 ) + parseInt(userCasa['empates'])
+
+            await userFora.save()
+            await userCasa.save()
+
+        } else if (jogoVencedorId == userCasaId) {
+            userFora['numeroJogos'] = parseInt(userFora['numeroJogos']) - 1
+            userFora['derrotas'] = parseInt(userFora['derrotas']) - 1
+            userFora['golsFeitos'] = parseInt(userFora['golsFeitos']) - parseInt(estatisticaJogo['userForaGols'])
+            userFora['golsSofridos'] = parseInt(userFora['golsSofridos']) - parseInt(estatisticaJogo['userCasaGols'])
+            userFora['saldoGols'] = parseInt(userFora['golsFeitos']) - parseInt(userFora['golsSofridos'])
+            userFora['pontos'] = ( parseInt(userFora['vitorias']) * 3 ) + parseInt(userFora['empates']) 
+
+            userCasa['numeroJogos'] = parseInt(userCasa['numeroJogos']) - 1
+            userCasa['vitorias'] = parseInt(userCasa['vitorias']) - 1
+            userCasa['golsFeitos'] = parseInt(userCasa['golsFeitos']) - parseInt(estatisticaJogo['userCasaGols'])
+            userCasa['golsSofridos'] = parseInt(userCasa['golsSofridos']) - parseInt(estatisticaJogo['userForaGols'])
+            userCasa['saldoGols'] = parseInt(userCasa['golsFeitos']) - parseInt(userCasa['golsSofridos'])
+            userCasa['pontos'] = ( parseInt(userCasa['vitorias']) * 3 ) + parseInt(userCasa['empates'])
+
+            await userFora.save()
+            await userCasa.save()
+
+        } else if (jogoVencedorId == 'empate') {
+            userFora['numeroJogos'] = parseInt(userFora['numeroJogos']) - 1
+            userFora['empates'] = parseInt(userFora['empates']) - 1
+            userFora['golsFeitos'] = parseInt(userFora['golsFeitos']) - parseInt(estatisticaJogo['userForaGols'])
+            userFora['golsSofridos'] = parseInt(userFora['golsSofridos']) - parseInt(estatisticaJogo['userCasaGols'])
+            userFora['saldoGols'] = parseInt(userFora['golsFeitos']) - parseInt(userFora['golsSofridos'])
+            userFora['pontos'] = ( parseInt(userFora['vitorias']) * 3 ) + parseInt(userFora['empates']) 
+
+            userCasa['numeroJogos'] = parseInt(userCasa['numeroJogos']) - 1
+            userCasa['empates'] = parseInt(userCasa['empates']) - 1
+            userCasa['golsFeitos'] = parseInt(userCasa['golsFeitos']) - parseInt(estatisticaJogo['userCasaGols'])
+            userCasa['golsSofridos'] = parseInt(userCasa['golsSofridos']) - parseInt(estatisticaJogo['userForaGols'])
+            userCasa['saldoGols'] = parseInt(userCasa['golsFeitos']) - parseInt(userCasa['golsSofridos'])
+            userCasa['pontos'] = ( parseInt(userCasa['vitorias']) * 3 ) + parseInt(userCasa['empates'])
+
+            await userFora.save()
+            await userCasa.save()
+
+        } else {
+            return new ResponseDTO('Error', 404, 'Não foi possível encontrar qual jogador ganhou essa partida, portanto não é possível atualizar as estatísticas')
+        }
+
+        // const response = [jogoVencedorId, estatisticaJogo, userFora, userCasa]
+
+        const response  = await jogosData.deleteJogoById(id)
+        // const response2 = await estatisticaJogadorData.deleteAllEstatisticaJogadorByJogoId(id)
 
         return new ResponseDTO('Success', 200, 'ok', response)
 

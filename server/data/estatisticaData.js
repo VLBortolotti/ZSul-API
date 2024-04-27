@@ -9,7 +9,7 @@ exports.postEstatistica = async (campeonatoId, jogoId, vencedor, userCasaId, use
 }
 
 exports.getEstatisticaJogoById = async (id) => {
-    return await EstatisticaJogo.find({ jogoId: id }, '-__v')
+    return await EstatisticaJogo.findOne({ jogoId: id }, '-__v')
 }
 
 exports.getEstatisticaById = async (id) => {
