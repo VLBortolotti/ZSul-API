@@ -1,7 +1,8 @@
 const estatisticaJogadorCampeonatoData = require('../data/estatisticaJogadorCampeonatoData')
 const estatisticaJogadorData = require('../data/estatisticaJogadorData')
-const campeonatoData  = require('../data/campeonatoData')
 const estatisticaData = require('../data/estatisticaData')
+const inscricoesData  = require('../data/inscricoesData')
+const campeonatoData  = require('../data/campeonatoData')
 const jogosData = require('../data/jogosData')
 const usersData = require('../data/usersData')
 const grupoData = require('../data/grupoData')
@@ -284,10 +285,14 @@ exports.deleteJogoById = async (id) => {
 
         const userCasaId = jogo['userIdCasa']
         const userCasa   = await usersData.getUserById(userCasaId)
-
+        
         const userForaId = jogo['userIdFora']
         const userFora   = await usersData.getUserById(userForaId)
-
+        
+        const inscricaoCasa = await inscricoesData.getInscricoesByUserId(userCasaId)
+        console.log(`inscricaoCasa length: ${inscricaoCasa}`)
+        const inscricaoFora = await inscricoesData.getInscricoesByUserId(userForaId)
+        
         // Verificando qual time ganhou (casa, fora ou empate)
         if (jogoVencedorId == userForaId) {
             userFora['numeroJogos'] = parseInt(userFora['numeroJogos']) - 1
@@ -297,6 +302,13 @@ exports.deleteJogoById = async (id) => {
             userFora['saldoGols'] = parseInt(userFora['golsFeitos']) - parseInt(userFora['golsSofridos'])
             userFora['pontos'] = ( parseInt(userFora['vitorias']) * 3 ) + parseInt(userFora['empates']) 
 
+            inscricaoFora['numeroJogos'] = parseInt(inscricaoFora['numeroJogos']) - 1
+            inscricaoFora['vitorias'] = parseInt(inscricaoFora['vitorias']) - 1
+            inscricaoFora['golsFeitos'] = parseInt(inscricaoFora['golsFeitos']) - parseInt(estatisticaJogo['userForaGols'])
+            inscricaoFora['golsSofridos'] = parseInt(inscricaoFora['golsSofridos']) - parseInt(estatisticaJogo['userCasaGols'])
+            inscricaoFora['saldoGols'] = parseInt(inscricaoFora['golsFeitos']) - parseInt(inscricaoFora['golsSofridos'])
+            inscricaoFora['pontos'] = ( parseInt(inscricaoFora['vitorias']) * 3 ) + parseInt(inscricaoFora['empates'])
+
             userCasa['numeroJogos'] = parseInt(userCasa['numeroJogos']) - 1
             userCasa['derrotas'] = parseInt(userCasa['derrotas']) - 1
             userCasa['golsFeitos'] = parseInt(userCasa['golsFeitos']) - parseInt(estatisticaJogo['userCasaGols'])
@@ -304,16 +316,41 @@ exports.deleteJogoById = async (id) => {
             userCasa['saldoGols'] = parseInt(userCasa['golsFeitos']) - parseInt(userCasa['golsSofridos'])
             userCasa['pontos'] = ( parseInt(userCasa['vitorias']) * 3 ) + parseInt(userCasa['empates'])
 
+            inscricaoCasa['numeroJogos'] = parseInt(inscricaoCasa['numeroJogos']) - 1
+            inscricaoCasa['derrotas'] = parseInt(inscricaoCasa['derrotas']) - 1
+            inscricaoCasa['golsFeitos'] = parseInt(inscricaoCasa['golsFeitos']) - parseInt(estatisticaJogo['userCasaGols'])
+            inscricaoCasa['golsSofridos'] = parseInt(inscricaoCasa['golsSofridos']) - parseInt(estatisticaJogo['userForaGols'])
+            inscricaoCasa['saldoGols'] = parseInt(inscricaoCasa['golsFeitos']) - parseInt(inscricaoCasa['golsSofridos'])
+            inscricaoCasa['pontos'] = ( parseInt(inscricaoCasa['vitorias']) * 3 ) + parseInt(inscricaoCasa['empates'])
+
             await userFora.save()
+            await inscricaoFora.save()
             await userCasa.save()
+            await inscricaoCasa.save()
 
         } else if (jogoVencedorId == userCasaId) {
+            console.log(`\nuserFora antes: ${userFora}\n`)
+
             userFora['numeroJogos'] = parseInt(userFora['numeroJogos']) - 1
             userFora['derrotas'] = parseInt(userFora['derrotas']) - 1
             userFora['golsFeitos'] = parseInt(userFora['golsFeitos']) - parseInt(estatisticaJogo['userForaGols'])
             userFora['golsSofridos'] = parseInt(userFora['golsSofridos']) - parseInt(estatisticaJogo['userCasaGols'])
             userFora['saldoGols'] = parseInt(userFora['golsFeitos']) - parseInt(userFora['golsSofridos'])
-            userFora['pontos'] = ( parseInt(userFora['vitorias']) * 3 ) + parseInt(userFora['empates']) 
+            userFora['pontos'] = ( parseInt(userFora['vitorias']) * 3 ) + parseInt(userFora['empates'])
+            
+            console.log(`\nuserFora depois: ${userFora}\n`)
+
+            console.log(`\inscricaoFora antes: ${inscricaoFora}\n`)
+
+            inscricaoFora['numeroJogos'] = parseInt(inscricaoFora['numeroJogos']) - 1
+            inscricaoFora['derrotas'] = parseInt(inscricaoFora['derrotas']) - 1
+            inscricaoFora['golsFeitos'] = parseInt(inscricaoFora['golsFeitos']) - parseInt(estatisticaJogo['userForaGols'])
+            inscricaoFora['golsSofridos'] = parseInt(inscricaoFora['golsSofridos']) - parseInt(estatisticaJogo['userCasaGols'])
+            inscricaoFora['saldoGols'] = parseInt(inscricaoFora['golsFeitos']) - parseInt(inscricaoFora['golsSofridos'])
+            inscricaoFora['pontos'] = ( parseInt(inscricaoFora['vitorias']) * 3 ) + parseInt(inscricaoFora['empates'])
+            
+            console.log(`\inscricaoFora depois: ${inscricaoFora}\n`)
+            console.log(`\inscricaoFora vitorias (${typeof inscricaoFora['vitorias']}): ${inscricaoFora['vitorias']} | empates ((${typeof inscricaoFora['empates']})): ${inscricaoFora['empates']}\n`)            
 
             userCasa['numeroJogos'] = parseInt(userCasa['numeroJogos']) - 1
             userCasa['vitorias'] = parseInt(userCasa['vitorias']) - 1
@@ -322,8 +359,17 @@ exports.deleteJogoById = async (id) => {
             userCasa['saldoGols'] = parseInt(userCasa['golsFeitos']) - parseInt(userCasa['golsSofridos'])
             userCasa['pontos'] = ( parseInt(userCasa['vitorias']) * 3 ) + parseInt(userCasa['empates'])
 
+            inscricaoCasa['numeroJogos'] = parseInt(inscricaoCasa['numeroJogos']) - 1
+            inscricaoCasa['vitorias'] = parseInt(inscricaoCasa['vitorias']) - 1
+            inscricaoCasa['golsFeitos'] = parseInt(inscricaoCasa['golsFeitos']) - parseInt(estatisticaJogo['userCasaGols'])
+            inscricaoCasa['golsSofridos'] = parseInt(inscricaoCasa['golsSofridos']) - parseInt(estatisticaJogo['userForaGols'])
+            inscricaoCasa['saldoGols'] = parseInt(inscricaoCasa['golsFeitos']) - parseInt(inscricaoCasa['golsSofridos'])
+            inscricaoCasa['pontos'] = ( parseInt(inscricaoCasa['vitorias']) * 3 ) + parseInt(inscricaoCasa['empates'])
+
             await userFora.save()
+            await inscricaoFora.save()
             await userCasa.save()
+            await inscricaoCasa.save()
 
         } else if (jogoVencedorId == 'empate') {
             userFora['numeroJogos'] = parseInt(userFora['numeroJogos']) - 1
@@ -331,7 +377,14 @@ exports.deleteJogoById = async (id) => {
             userFora['golsFeitos'] = parseInt(userFora['golsFeitos']) - parseInt(estatisticaJogo['userForaGols'])
             userFora['golsSofridos'] = parseInt(userFora['golsSofridos']) - parseInt(estatisticaJogo['userCasaGols'])
             userFora['saldoGols'] = parseInt(userFora['golsFeitos']) - parseInt(userFora['golsSofridos'])
-            userFora['pontos'] = ( parseInt(userFora['vitorias']) * 3 ) + parseInt(userFora['empates']) 
+            userFora['pontos'] = ( parseInt(userFora['vitorias']) * 3 ) + parseInt(userFora['empates'])
+            
+            inscricaoFora['numeroJogos'] = parseInt(inscricaoFora['numeroJogos']) - 1
+            inscricaoFora['empates'] = parseInt(inscricaoFora['empates']) - 1
+            inscricaoFora['golsFeitos'] = parseInt(inscricaoFora['golsFeitos']) - parseInt(estatisticaJogo['userForaGols'])
+            inscricaoFora['golsSofridos'] = parseInt(inscricaoFora['golsSofridos']) - parseInt(estatisticaJogo['userCasaGols'])
+            inscricaoFora['saldoGols'] = parseInt(inscricaoFora['golsFeitos']) - parseInt(inscricaoFora['golsSofridos'])
+            inscricaoFora['pontos'] = ( parseInt(inscricaoFora['vitorias']) * 3 ) + parseInt(inscricaoFora['empates']) 
 
             userCasa['numeroJogos'] = parseInt(userCasa['numeroJogos']) - 1
             userCasa['empates'] = parseInt(userCasa['empates']) - 1
@@ -340,12 +393,33 @@ exports.deleteJogoById = async (id) => {
             userCasa['saldoGols'] = parseInt(userCasa['golsFeitos']) - parseInt(userCasa['golsSofridos'])
             userCasa['pontos'] = ( parseInt(userCasa['vitorias']) * 3 ) + parseInt(userCasa['empates'])
 
+            inscricaoCasa['numeroJogos'] = parseInt(inscricaoCasa['numeroJogos']) - 1
+            inscricaoCasa['empates'] = parseInt(inscricaoCasa['empates']) - 1
+            inscricaoCasa['golsFeitos'] = parseInt(inscricaoCasa['golsFeitos']) - parseInt(estatisticaJogo['userCasaGols'])
+            inscricaoCasa['golsSofridos'] = parseInt(inscricaoCasa['golsSofridos']) - parseInt(estatisticaJogo['userForaGols'])
+            inscricaoCasa['saldoGols'] = parseInt(inscricaoCasa['golsFeitos']) - parseInt(inscricaoCasa['golsSofridos'])
+            inscricaoCasa['pontos'] = ( parseInt(inscricaoCasa['vitorias']) * 3 ) + parseInt(inscricaoCasa['empates'])
+
             await userFora.save()
+            await inscricaoFora.save()
             await userCasa.save()
+            await inscricaoCasa.save()
 
         } else {
             return new ResponseDTO('Error', 404, 'Não foi possível encontrar qual jogador ganhou essa partida, portanto não é possível atualizar as estatísticas')
         }
+
+        // Atualizando a estatistica dos jogadores
+        const jogadoresCasa = await estatisticaJogadorData.getAllEstatisticasByTeamId(userCasaId)
+        const jogadoresFora = await estatisticaJogadorData.getAllEstatisticasByTeamId(userForaId)
+
+        jogadoresCasa.forEach(jogador => {
+            console.log(`Jogador casa: ${jogador}`)
+        });
+
+        jogadoresFora.forEach(jogador => {
+            console.log(`Jogador fora: ${jogador}`)
+        });
 
         // const response = [jogoVencedorId, estatisticaJogo, userFora, userCasa]
 
