@@ -30,35 +30,35 @@ const userSchema = mongoose.Schema(
         }, 
         numeroJogos : {
             type: Number,
-            default: null
+            default: 0
         },
         vitorias: {
             type: Number,
-            default: null
+            default: 0
         },
         empates: {
             type: Number,
-            default: null
+            default: 0
         },
         derrotas: {
             type: Number,
-            default: null
+            default: 0
         },
         golsFeitos: {
             type: Number,
-            default: null
+            default: 0
         },
         golsSofridos: {
             type: Number,
-            default: null
+            default: 0
         },
         saldoGols: {
             type: Number,
-            default: null
+            default: 0
         },
         pontos: {
             type: Number,
-            default: null
+            default: 0
         },
         // picture: {
         //     type: String, // path

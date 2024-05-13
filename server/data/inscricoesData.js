@@ -20,7 +20,7 @@ exports.getInscricaoById = async (id) => {
 }
 
 exports.getInscricoesByUserId = async (userId) => {
-    return await Inscricao.find({ userId: userId })
+    return await Inscricao.findOne({ userId: userId })
 }
 
 exports.getInscricoesByCampeonatoId = async (campeonatoId) => {
