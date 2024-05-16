@@ -19,7 +19,7 @@ const inscricaoSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        numeroJogos : {
+        numeroJogos: {
             type: Number,
             default: 0
         },
