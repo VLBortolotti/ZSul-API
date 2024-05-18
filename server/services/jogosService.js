@@ -405,38 +405,31 @@ exports.deleteJogoById = async (id) => {
         const jogadoresCasa = await estatisticaJogadorData.getAllEstatisticasByTeamId(userCasaId, id)
         const jogadoresFora = await estatisticaJogadorData.getAllEstatisticasByTeamId(userForaId, id)
 
-        async function atualizarJogadoresCasa() {
-            for (const jogador of jogadoresCasa) {
-                const jogadorId = jogador.jogadorId
-                console.log(`\njogadoresCasa antes: ${jogadoresCasa}`)
-                const estatisticaJogador = await estatisticaJogadorCampeonatoData.getEstatisticaJogadorCampeonatoByCampeonatoIdAndJogadorId(campeonatoId, jogadorId)
+        for (const jogador of jogadoresCasa) {
+            const jogadorId = jogador.jogadorId
+            console.log(`\njogadoresCasa antes: ${jogadoresCasa}`)
+            const estatisticaJogador = await estatisticaJogadorCampeonatoData.getEstatisticaJogadorCampeonatoByCampeonatoIdAndJogadorId(campeonatoId, jogadorId)
 
-                estatisticaJogador['gols'] = parseInt(estatisticaJogador['gols']) - parseInt(jogador['gols'])
-                estatisticaJogador['numeroCartoesAmarelo'] = parseInt(estatisticaJogador['numeroCartoesAmarelo']) - parseInt(jogador['numeroCartoesAmarelo'])
-                estatisticaJogador['numeroCartoesVermelho'] = parseInt(estatisticaJogador['numeroCartoesVermelho']) - parseInt(jogador['numeroCartoesVermelho'])
+            estatisticaJogador['gols'] = parseInt(estatisticaJogador['gols']) - parseInt(jogador['gols'])
+            estatisticaJogador['numeroCartoesAmarelo'] = parseInt(estatisticaJogador['numeroCartoesAmarelo']) - parseInt(jogador['numeroCartoesAmarelo'])
+            estatisticaJogador['numeroCartoesVermelho'] = parseInt(estatisticaJogador['numeroCartoesVermelho']) - parseInt(jogador['numeroCartoesVermelho'])
 
-                await estatisticaJogador.save()
-                console.log(`jogadoresCasa depois: ${estatisticaJogador}\n`)
-            }
+            await estatisticaJogador.save()
+            console.log(`jogadoresCasa depois: ${estatisticaJogador}\n`)
         }
-        atualizarJogadoresCasa()
+        
+        for (const jogador of jogadoresFora) {
+            const jogadorId = jogador.jogadorId
+            console.log(`\njogadoresFora antes: ${jogadoresFora}`)
+            const estatisticaJogador = await estatisticaJogadorCampeonatoData.getEstatisticaJogadorCampeonatoByCampeonatoIdAndJogadorId(campeonatoId, jogadorId)
 
-        async function atualizarJogadoresFora () {
-            for (const jogador of jogadoresFora) {
-                const jogadorId = jogador.jogadorId
-                console.log(`\njogadoresFora antes: ${jogadoresFora}`)
-                const estatisticaJogador = await estatisticaJogadorCampeonatoData.getEstatisticaJogadorCampeonatoByCampeonatoIdAndJogadorId(campeonatoId, jogadorId)
+            estatisticaJogador['gols'] = parseInt(estatisticaJogador['gols']) - parseInt(jogador['gols'])
+            estatisticaJogador['numeroCartoesAmarelo'] = parseInt(estatisticaJogador['numeroCartoesAmarelo']) - parseInt(jogador['numeroCartoesAmarelo'])
+            estatisticaJogador['numeroCartoesVermelho'] = parseInt(estatisticaJogador['numeroCartoesVermelho']) - parseInt(jogador['numeroCartoesVermelho'])
 
-                estatisticaJogador['gols'] = parseInt(estatisticaJogador['gols']) - parseInt(jogador['gols'])
-                estatisticaJogador['numeroCartoesAmarelo'] = parseInt(estatisticaJogador['numeroCartoesAmarelo']) - parseInt(jogador['numeroCartoesAmarelo'])
-                estatisticaJogador['numeroCartoesVermelho'] = parseInt(estatisticaJogador['numeroCartoesVermelho']) - parseInt(jogador['numeroCartoesVermelho'])
-
-                await estatisticaJogador.save()
-                console.log(`\njogadoresFora depois: ${estatisticaJogador}`)
-
-            }
+            await estatisticaJogador.save()
+            console.log(`\njogadoresFora depois: ${estatisticaJogador}`)
         }
-        atualizarJogadoresFora()
 
         // const response = [jogoVencedorId, estatisticaJogo, userFora, userCasa]
         
