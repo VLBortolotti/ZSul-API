@@ -408,6 +408,7 @@ exports.deleteJogoById = async (id) => {
         async function atualizarJogadoresCasa() {
             for (const jogador of jogadoresCasa) {
                 const jogadorId = jogador.jogadorId
+                console.log(`\njogadoresCasa antes: ${jogadoresCasa}`)
                 const estatisticaJogador = await estatisticaJogadorCampeonatoData.getEstatisticaJogadorCampeonatoByCampeonatoIdAndJogadorId(campeonatoId, jogadorId)
 
                 estatisticaJogador['gols'] = parseInt(estatisticaJogador['gols']) - parseInt(jogador['gols'])
@@ -415,6 +416,7 @@ exports.deleteJogoById = async (id) => {
                 estatisticaJogador['numeroCartoesVermelho'] = parseInt(estatisticaJogador['numeroCartoesVermelho']) - parseInt(jogador['numeroCartoesVermelho'])
 
                 await estatisticaJogador.save()
+                console.log(`jogadoresCasa depois: ${estatisticaJogador}\n`)
             }
         }
         atualizarJogadoresCasa()
@@ -422,6 +424,7 @@ exports.deleteJogoById = async (id) => {
         async function atualizarJogadoresFora () {
             for (const jogador of jogadoresFora) {
                 const jogadorId = jogador.jogadorId
+                console.log(`\njogadoresFora antes: ${jogadoresFora}`)
                 const estatisticaJogador = await estatisticaJogadorCampeonatoData.getEstatisticaJogadorCampeonatoByCampeonatoIdAndJogadorId(campeonatoId, jogadorId)
 
                 estatisticaJogador['gols'] = parseInt(estatisticaJogador['gols']) - parseInt(jogador['gols'])
@@ -429,6 +432,8 @@ exports.deleteJogoById = async (id) => {
                 estatisticaJogador['numeroCartoesVermelho'] = parseInt(estatisticaJogador['numeroCartoesVermelho']) - parseInt(jogador['numeroCartoesVermelho'])
 
                 await estatisticaJogador.save()
+                console.log(`\njogadoresFora depois: ${estatisticaJogador}`)
+
             }
         }
         atualizarJogadoresFora()
