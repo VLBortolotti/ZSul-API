@@ -95,7 +95,7 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         console.log(`\nelencoByCampeonatoId: ${elencoByCampeonatoId}`)
         console.log(`Length: ${Object.keys(elencoByCampeonatoId).length}\n`)
         console.log(`Maior que 2: ${Object.keys(elencoByCampeonatoId).length >= 2}\n`)
-        if (Object.keys(elencoByCampeonatoId).length >= 2) {
+        if (Object.keys(elencoByCampeonatoId).length >= 1) {
             return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado em outra súmula deste campeonato')
         }
 
