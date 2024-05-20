@@ -66,19 +66,24 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
             return new ResponseDTO('Error', 400, 'Atleta com este identificador não existente')
         }
 
+        console.log(`\nelenco: ${elenco}\n`)
+
         let elencoDocumento = null
         let elencoByCampeonatoId = null
         if (elenco.RG !== null) {
+            console.log('\nCAIU NO RG!\n')
             elencoDocumento = elenco.RG
             const elencoRG  = elenco.RG
             elencoByCampeonatoId = await sumulaData.findElencoDocumentByCampeonatoId(elencoRG, campeonatoId)
 
         } else if (elenco.CPF !== null) {
+            console.log('\nCAIU NO CPF!\n')
             elencoDocumento = elenco.CPF
             const elencoCPF = elenco.CPF
             elencoByCampeonatoId = await sumulaData.findElencoDocumentByCampeonatoId(elencoCPF, campeonatoId)
 
         } else if (elenco.certidaoNascimento !== null) {
+            console.log('\nCAIU NO certidaoNascimento!\n')
             elencoDocumento = elenco.certidaoNascimento
             const elencoCertidao = elenco.certidaoNascimento
             elencoByCampeonatoId = await sumulaData.findElencoDocumentByCampeonatoId(elencoCertidao, campeonatoId)
@@ -87,6 +92,9 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
             return new ResponseDTO('Error', 500, 'Documento do atleta não encontrado')
         }
 
+        console.log(`\nelencoByCampeonatoId: ${elencoByCampeonatoId}`)
+        console.log(`Length: ${Object.keys(elencoByCampeonatoId).length}\n`)
+        console.log(`Maior que 2: ${Object.keys(elencoByCampeonatoId).length >= 2}\n`)
         if (Object.keys(elencoByCampeonatoId).length >= 2) {
             return new ResponseDTO('Error', 400, 'Este atleta já está cadastrado em outra súmula deste campeonato')
         }
