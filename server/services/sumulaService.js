@@ -109,16 +109,11 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         const campeonatoParts = campeonatoName.split('-').map(part => part.trim())
         const campeonatoNameOnly = campeonatoParts[0]
 
-        SumulaModel.find({ elencoId: elencoId, campeonatoName: {$regex: campeonatoNameOnly, $options: 'i'} }, (error, results) => {
-            if (error) {
-                console.log(`Error: ${error}`)
-                return new ResponseDTO('Error', 500, 'Erro no servidor')
-            } else {
-                if (Object.keys(results).length >= 1 || results.length >= 1) {
-                    return new ResponseDTO('Error', 400, 'Atleta já cadastrado em outro campeonato com o mesmo nome')
-                }
-            }
-        })
+        const results = await SumulaModel.find({ elencoId: elencoId, campeonatoName: {$regex: campeonatoNameOnly, $options: 'i'} }).exec()
+
+        if (results.length >= 1 || Object.keys(results).length >= 1) {
+            return new ResponseDTO('Error', 400, 'Atleta já cadastrado em outro campeonato de mesmo nome')
+        }
 
         // Cateogira do atleta acima da categoria do campeonato
         // entao, cadastrar elenco na SumulaPermissaoModel
