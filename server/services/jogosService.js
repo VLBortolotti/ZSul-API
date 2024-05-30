@@ -285,6 +285,12 @@ exports.deleteJogoById = async (id) => {
         const estatisticaJogo = await estatisticaData.getEstatisticaJogoById(id)
         const jogoVencedorId  = estatisticaJogo['vencedor']
 
+        if (jogoVencedorId.length == 0) {
+            const response = await jogosData.deleteJogoById(id)
+
+            return new ResponseDTO('Success', 200, 'ok', response)
+        }
+
         const userCasaId = jogo['userIdCasa']
         const userCasa   = await usersData.getUserById(userCasaId)
         
