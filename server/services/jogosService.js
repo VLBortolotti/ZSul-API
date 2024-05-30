@@ -291,8 +291,8 @@ exports.deleteJogoById = async (id) => {
         const userForaId = jogo['userIdFora']
         const userFora   = await usersData.getUserById(userForaId)
         
-        const inscricaoCasa = await inscricoesData.getInscricoesByUserId(userCasaId)
-        const inscricaoFora = await inscricoesData.getInscricoesByUserId(userForaId)
+        const inscricaoCasa = await inscricoesData.getInscricaoByUserIdAndCampeonatoId(userCasaId, campeonatoId)
+        const inscricaoFora = await inscricoesData.getInscricaoByUserIdAndCampeonatoId(userForaId, campeonatoId)
         
         // Verificando qual time ganhou (casa, fora ou empate)
         if (jogoVencedorId == userForaId) {
