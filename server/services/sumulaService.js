@@ -111,18 +111,26 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
 
         console.log(`\ncampeonatoNameOnly: ${campeonatoNameOnly}\n`)
 
-        const results = await SumulaModel.find({ 
-                elencoId: elencoId, 
-                campeonatoName: { $regex: new RegExp(campeonatoNameOnly, 'i') } 
-            }).exec()
+        const elencoInCampeonato = await SumulaModel.find({ elencoId: elencoId })
 
-        console.log(`\nresults: ${results}\nTamanho: ${results.length >= 1} | ${Object.keys(results).length >= 1}\n`)
-        console.log(`\ntipo dos results: ${typeof results}\n`)
+        elenco.forEach((sumula) => {
+            if ( (sumula.campeonatoName).includes(campeonatoNameOnly) ) {
+                return new ResponseDTO('Error', 400, 'Atleta já cadastrado em outro campeonato de mesmo nome')
+            }
+        })
+
+        // const results = await SumulaModel.find({ 
+        //         elencoId: elencoId, 
+        //         campeonatoName: { $regex: new RegExp(campeonatoNameOnly, 'i') } 
+        //     }).exec()
+
+        // console.log(`\nresults: ${results}\nTamanho: ${results.length >= 1} | ${Object.keys(results).length >= 1}\n`)
+        // console.log(`\ntipo dos results: ${typeof results}\n`)
 
 
-        if (results.length >= 1 || Object.keys(results).length >= 1) {
-            return new ResponseDTO('Error', 400, 'Atleta já cadastrado em outro campeonato de mesmo nome')
-        }
+        // if (results.length >= 1 || Object.keys(results).length >= 1) {
+        //     return new ResponseDTO('Error', 400, 'Atleta já cadastrado em outro campeonato de mesmo nome')
+        // }
 
         // Cateogira do atleta acima da categoria do campeonato
         // entao, cadastrar elenco na SumulaPermissaoModel
