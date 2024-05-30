@@ -109,6 +109,8 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         const campeonatoParts = campeonatoName.split('-').map(part => part.trim())
         const campeonatoNameOnly = campeonatoParts[0]
 
+        console.log(`\ncampeonatoNameOnly: ${campeonatoNameOnly}\n`)
+
         const results = await SumulaModel.find({ elencoId: elencoId, campeonatoName: {$regex: campeonatoNameOnly, $options: 'i'} }).exec()
 
         console.log(`\nresults: ${results}\nTamanho: ${results.length >= 1} | ${Object.keys(results).length >= 1}\n`)
