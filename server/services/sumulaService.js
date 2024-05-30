@@ -6,6 +6,7 @@ const sumulaPermissaoData = require('../data/sumulaPermissaoData')
 
 const SumulaModel = require('../models/SumulaModel')
 const ObjectId    = require('mongoose').Types.ObjectId
+const CampeonatoModel = require('../models/CampeonatoModel')
 const { ResponseDTO } = require('../dtos/Response')
 
 const fs    = require('fs')
@@ -102,6 +103,22 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
 
         const campeonatoCategoria = campeonato.categoria
         const elencoCategoria     = elenco.category
+
+        // Exemplo: 'COPA NECA - SUB 15'
+        // pegar apenas 'COPA NECA'
+        const campeonatoParts = campeonatoName.split('-').map(part => part.trim())
+        const campeonatoNameOnly = campeonatoParts[0]
+
+        SumulaModel.find({ elencoId: elencoId, campeonatoName: {$regex: campeonatoNameOnly, $options: 'i'} }, (error, results) => {
+            if (error) {
+                console.log(`Error: ${error}`)
+                return new ResponseDTO('Error', 500, 'Erro no servidor')
+            } else {
+                if (Object.keys(results).length >= 1 || results.length >= 1) {
+                    return new ResponseDTO('Error', 400, 'Atleta já cadastrado em outro campeonato com o mesmo nome')
+                }
+            }
+        })
 
         // Cateogira do atleta acima da categoria do campeonato
         // entao, cadastrar elenco na SumulaPermissaoModel
