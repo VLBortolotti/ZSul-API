@@ -111,6 +111,8 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
 
         const results = await SumulaModel.find({ elencoId: elencoId, campeonatoName: {$regex: campeonatoNameOnly, $options: 'i'} }).exec()
 
+        console.log(`\nresults: ${results}\nTamanho: ${results.length >= 1} | ${Object.keys(results).length >= 1}\n`)
+
         if (results.length >= 1 || Object.keys(results).length >= 1) {
             return new ResponseDTO('Error', 400, 'Atleta já cadastrado em outro campeonato de mesmo nome')
         }
