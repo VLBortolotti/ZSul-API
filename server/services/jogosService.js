@@ -280,17 +280,16 @@ exports.deleteJogoById = async (id) => {
             return new ResponseDTO('Error', 404, 'Jogo com este identificador não encontrado')
         }
 
-        const campeonatoId = jogo.campeonatoId
-
+        const campeonatoId    = jogo.campeonatoId
         const estatisticaJogo = await estatisticaData.getEstatisticaJogoById(id)
-        const jogoVencedorId  = estatisticaJogo['vencedor']
-
-        if (jogoVencedorId == null) {
+        
+        if (!estatisticaJogo) {
             const response = await jogosData.deleteJogoById(id)
-
+            
             return new ResponseDTO('Success', 200, 'ok', response)
         }
-
+        
+        const jogoVencedorId  = estatisticaJogo['vencedor']
         const userCasaId = jogo['userIdCasa']
         const userCasa   = await usersData.getUserById(userCasaId)
         
