@@ -113,7 +113,10 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
 
         const elencoInCampeonato = await SumulaModel.find({ elencoId: elencoId })
 
+        console.log(`\nelencoInCampeonato: ${elencoInCampeonato}\n`)
+        console.log(`campeonatoNameOnly: ${campeonatoNameOnly}`)
         elencoInCampeonato.forEach((sumula) => {
+            console.log(`sumula.campeonatoName: ${sumula.campeonatoName} | includes: ${(sumula.campeonatoName).includes(campeonatoNameOnly)}`)
             if ( (sumula.campeonatoName).includes(campeonatoNameOnly) ) {
                 return new ResponseDTO('Error', 400, 'Atleta já cadastrado em outro campeonato de mesmo nome')
             }
