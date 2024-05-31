@@ -110,8 +110,8 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         const campeonatoNameOnly = campeonatoParts[0]
 
         console.log(`\ncampeonatoNameOnly: ${campeonatoNameOnly}\n`)
-
-        const elencoInCampeonato = await SumulaModel.find({ elencoId: elencoId })
+        
+        const elencoInCampeonato = await SumulaModel.find({ elencoDocumento: elencoDocumento })
 
         console.log(`\nelencoInCampeonato: ${elencoInCampeonato}\n`)
         console.log(`campeonatoNameOnly: ${campeonatoNameOnly}`)
