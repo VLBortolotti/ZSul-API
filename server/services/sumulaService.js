@@ -124,7 +124,9 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
             }
         })
 
-        return new ResponseDTO('Error', 400, `Atleta já cadastrado em outro(s) ${count} campeonato de mesmo nome`)
+        if (count >= 1) {
+            return new ResponseDTO('Error', 400, `Atleta já cadastrado em outro(s) ${count} campeonato de mesmo nome`)
+        }
 
         // const results = await SumulaModel.find({ 
         //         elencoId: elencoId, 
