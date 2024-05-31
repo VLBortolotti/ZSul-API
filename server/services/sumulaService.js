@@ -108,17 +108,11 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         // pegar apenas 'COPA NECA'
         const campeonatoParts = campeonatoName.split('-').map(part => part.trim())
         const campeonatoNameOnly = campeonatoParts[0]
-
-        console.log(`\ncampeonatoNameOnly: ${campeonatoNameOnly}\n`)
         
         const elencoInCampeonato = await SumulaModel.find({ elencoDocumento: elencoDocumento })
 
-        console.log(`\nelencoInCampeonato: ${elencoInCampeonato}\n`)
-        console.log(`campeonatoNameOnly: ${campeonatoNameOnly}`)
-
         let count = 0
         elencoInCampeonato.forEach((sumula) => {
-            console.log(`sumula.campeonatoName: ${sumula.campeonatoName} | includes: ${(sumula.campeonatoName).includes(campeonatoNameOnly)}`)
             if ( (sumula.campeonatoName).includes(campeonatoNameOnly) ) {
                 count += 1
             }
@@ -128,20 +122,7 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
             return new ResponseDTO('Error', 400, `Atleta já cadastrado em outro(s) ${count} campeonato de mesmo nome`)
         }
 
-        // const results = await SumulaModel.find({ 
-        //         elencoId: elencoId, 
-        //         campeonatoName: { $regex: new RegExp(campeonatoNameOnly, 'i') } 
-        //     }).exec()
-
-        // console.log(`\nresults: ${results}\nTamanho: ${results.length >= 1} | ${Object.keys(results).length >= 1}\n`)
-        // console.log(`\ntipo dos results: ${typeof results}\n`)
-
-
-        // if (results.length >= 1 || Object.keys(results).length >= 1) {
-        //     return new ResponseDTO('Error', 400, 'Atleta já cadastrado em outro campeonato de mesmo nome')
-        // }
-
-        // Cateogira do atleta acima da categoria do campeonato
+        // Categoria do atleta acima da categoria do campeonato
         // entao, cadastrar elenco na SumulaPermissaoModel
         if (elencoCategoria > campeonatoCategoria) {
             const response = await sumulaPermissaoData.postSumulaPermissao(campeonatoId, campeonatoCategoria, campeonatoName, userId, userName, elencoId, elencoCategoria, elencoName, elencoDocumento, 'banco')
