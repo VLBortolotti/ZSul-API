@@ -114,7 +114,9 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
         let count = 0
         elencoInCampeonato.forEach((sumula) => {
             if ( (sumula.campeonatoName).includes(campeonatoNameOnly) ) {
-                count += 1
+                if (sumula.userName != userName) {
+                    count += 1
+                }
             }
         })
 
