@@ -11,7 +11,7 @@ router.get('/campeonato/:id', estatisticaJogadorCampeonatoController.getEstatist
 router.get('/all', estatisticaJogadorCampeonatoController.getAllEstatisticaJogadorCampeonato)
 router.get('/:id', estatisticaJogadorCampeonatoController.getEstatisticaJogadorCampeonatoById)
 
-router.patch('/:id', estatisticaJogadorCampeonatoController.updateEstatisticaJogadorCampeonatoById)
+router.patch('/update', estatisticaJogadorCampeonatoController.updateEstatisticaJogadorCampeonatoById)
 
 router.delete('/clean', estatisticaJogadorCampeonatoController.cleanDatabase)
 router.delete('/:id', estatisticaJogadorCampeonatoController.deleteEstatisticaJogadorCampeonatoById)

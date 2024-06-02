@@ -267,7 +267,7 @@ exports.updateEstatisticaJogadorCampeonatoById = async (field, value, campeonato
             const campeonatoName = campeonato.name
             const jogadorName    = jogador.name
             
-            const response = await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, teamId, teamName, jogadorId, jogadorName, 0, 0, 0, '')
+            const response = await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, teamId, teamName, jogadorId, jogadorName, '0', '0', '0', '')
 
             return new ResponseDTO('Success', 200, 'ok', response)
         }
