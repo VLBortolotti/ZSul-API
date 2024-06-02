@@ -46,10 +46,9 @@ exports.getEstatisticaJogadorCampeonatoById = async (req, res, next) => {
 }
 
 exports.updateEstatisticaJogadorCampeonatoById = async (req, res, next) => {
-    const { id } = req.body
-    const { field, value } = req.body
+    const { field, value, campeonatoId, jogadorId } = req.body
 
-    const response = await estatisticaJogadorCampeonatoService.updateEstatisticaJogadorCampeonatoById(id, field, value)
+    const response = await estatisticaJogadorCampeonatoService.updateEstatisticaJogadorCampeonatoById(field, value, campeonatoId, jogadorId)
 
     response.sendResponse(res)
 }

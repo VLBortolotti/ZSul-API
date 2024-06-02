@@ -229,8 +229,63 @@ exports.getEstatisticaJogadorCampeonatoById = async (id) => {
     }
 }
 
-exports.updateEstatisticaJogadorCampeonatoById = async () => {
+exports.updateEstatisticaJogadorCampeonatoById = async (field, value, campeonatoId, jogadorId) => {
     try {
+        if (!campeonatoId) {
+            return ResponseDTO('Error', 400, 'Identificador do campeonato não preenchido')
+        }
+
+        if (!ObjectId.isValid(campeonatoId)) {
+            return new ResponseDTO('Error', 400, 'Identificador do campeonato não é válido')
+        }
+
+        const campeonato = await campeonatoData.getCampeonatoById(campeonatoId)
+        if (!campeonato) {
+            return new ResponseDTO('Error', 404, 'Campeonato com este identificador não existente')
+        }
+
+        if (!jogadorId) {
+            return ResponseDTO('Error', 400, 'Identificador do jogador não preenchido')
+        }
+
+        if (!ObjectId.isValid(jogadorId)) {
+            return new ResponseDTO('Error', 400, 'Identificador do jogador não é válido')
+        }
+
+        const jogador = await elencoData.getAthleteById(jogadorId)
+        if (!jogador) {
+            return new ResponseDTO('Error', 404, 'Jogador com este identificador não existente')
+        }
+
+        const estatisticaJogadorCampeonato = await estatisticaJogadorCampeonatoData.getEstatisticaJogadorCampeonatoByCampeonatoIdAndJogadorId(campeonatoId, jogadorId)
+
+        if (!estatisticaJogadorCampeonato) {
+            const teamId   = jogador.teamId
+            const team     = await usersData.getUserById(teamId) 
+            const teamName = team.teamName
+
+            const campeonatoName = campeonato.name
+            const jogadorName    = jogador.name
+            
+            const response = await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, teamId, teamName, jogadorId, jogadorName, 0, 0, 0, '')
+
+            return new ResponseDTO('Success', 200, 'ok', response)
+        }
+
+        if (!field) {
+            return ResponseDTO('Error', 400, 'Campo não preenchido')
+        }
+
+        if (!value) {
+            return ResponseDTO('Error', 400, 'Valor não preenchido')
+        }
+
+        estatisticaJogadorCampeonato[field] = value
+        estatisticaJogadorCampeonato.save()
+
+        const response = await estatisticaJogadorCampeonatoData.getEstatisticaJogadorCampeonatoByCampeonatoIdAndJogadorId(campeonatoId, jogadorId)
+
+        return new ResponseDTO('Success', 200, 'ok', response)
 
     } catch (error) {
         console.log(`Erro: ${error}`)

@@ -1,8 +1,9 @@
+const estatisticaJogadorCampeonatoData = require('../data/estatisticaJogadorCampeonatoData')
+const sumulaPermissaoData = require('../data/sumulaPermissaoData')
 const campeonatoData = require('../data/campeonatoData')
 const usersData  = require('../data/usersData')
 const elencoData = require('../data/elencoData')
 const sumulaData = require('../data/sumulaData')
-const sumulaPermissaoData = require('../data/sumulaPermissaoData')
 
 const SumulaModel = require('../models/SumulaModel')
 const ObjectId    = require('mongoose').Types.ObjectId
@@ -142,15 +143,21 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
             if (sumulaActiveCount >= 30) {
                 const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, 'banco')
 
+                await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, 0, 0, 0, '')
+
                 return new ResponseDTO('Success', 200, 'ok', response)
             }
 
             const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, status)
 
+            await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, userId, userName, elencoId, elencoName, 0, 0, 0, 0)
+
             return new ResponseDTO('Success', 200, 'ok', response)
 
         } else if (status == "banco"){
             const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, status)
+
+            await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, userId, userName, elencoId, elencoName, 0, 0, 0, 0)
 
             return new ResponseDTO('Success', 200, 'ok', response)
 

@@ -1,8 +1,9 @@
+const estatisticaJogadorCampeonatoData = require('../data/estatisticaJogadorCampeonatoData')
+const sumulaPermissaoData = require('../data/sumulaPermissaoData')
 const campeonatoData = require('../data/campeonatoData')
 const usersData  = require('../data/usersData')
 const elencoData = require('../data/elencoData')
 const sumulaData = require('../data/sumulaData')
-const sumulaPermissaoData = require('../data/sumulaPermissaoData')
 
 const SumulaModel = require('../models/SumulaModel')
 const ObjectId    = require('mongoose').Types.ObjectId
@@ -37,6 +38,8 @@ exports.aprovarSumulaPermissaoById = async (id) => {
         const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, 'banco')
 
         await sumulaPermissaoData.deletarSumulaPermissaoById(id)
+
+        await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, userId, userName, elencoId, elencoName, 0, 0, 0, '')
 
         return new ResponseDTO('Success', 200, 'ok', response)
 
