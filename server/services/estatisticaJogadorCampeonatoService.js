@@ -257,6 +257,14 @@ exports.updateEstatisticaJogadorCampeonatoById = async (field, value, campeonato
             return new ResponseDTO('Error', 404, 'Jogador com este identificador não existente')
         }
 
+        if (!field) {
+            return ResponseDTO('Error', 400, 'Campo não preenchido')
+        }
+
+        if (!value) {
+            return ResponseDTO('Error', 400, 'Valor não preenchido')
+        }
+
         const estatisticaJogadorCampeonato = await estatisticaJogadorCampeonatoData.getEstatisticaJogadorCampeonatoByCampeonatoIdAndJogadorId(campeonatoId, jogadorId)
 
         if (!estatisticaJogadorCampeonato) {
@@ -267,17 +275,18 @@ exports.updateEstatisticaJogadorCampeonatoById = async (field, value, campeonato
             const campeonatoName = campeonato.name
             const jogadorName    = jogador.name
             
-            const response = await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, teamId, teamName, jogadorId, jogadorName, '0', '0', '0', '')
 
-            return new ResponseDTO('Success', 200, 'ok', response)
-        }
+            if (field == 'punicao') {
+                const response = await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, teamId, teamName, jogadorId, jogadorName, '0', '0', '0', value)
 
-        if (!field) {
-            return ResponseDTO('Error', 400, 'Campo não preenchido')
-        }
+                return new ResponseDTO('Success', 200, 'ok', response)
 
-        if (!value) {
-            return ResponseDTO('Error', 400, 'Valor não preenchido')
+            } else {
+                const response = await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, teamId, teamName, jogadorId, jogadorName, '0', '0', '0', '')
+
+                return new ResponseDTO('Success', 200, 'ok', response)
+            }
+            
         }
 
         estatisticaJogadorCampeonato[field] = value
