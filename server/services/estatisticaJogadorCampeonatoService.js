@@ -4,9 +4,6 @@ const estatisticaJogadorData  = require('../data/estatisticaJogadorData')
 const EstatisticaJogadorCampeonatoModel = require('../models/EstatisticaJogadorCampeonatoModel')
 const estatisticaJogadorCampeonatoData  = require('../data/estatisticaJogadorCampeonatoData')
 
-const EstatisticaJogadorModel = require('../models/EstatisticaJogadorModel')
-const estatisticaJogadorData  = require('../data/estatisticaJogadorData')
-
 const campeonatoData = require('../data/campeonatoData')
 const jogosData  = require('../data/jogosData')
 const usersData  = require('../data/usersData')
