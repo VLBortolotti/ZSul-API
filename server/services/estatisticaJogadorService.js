@@ -308,7 +308,9 @@ exports.getAllEstatisticasJogadoresPunidos = async () => {
     try {
         const response = await estatisticaJogadorData.getAllEstatisticasJogadoresPunidos()
 
-        return new ResponseDTO('Success', 200, 'ok', response)
+        const response2 = await estatisticaJogadorCampeonatoData.getAllEstatisticasJogadoresPunidos()
+
+        return new ResponseDTO('Success', 200, 'ok', [response, response2])
 
     } catch (error) {
         console.log(`Erro: ${error}`)

@@ -32,6 +32,10 @@ exports.getEstatisticaJogadorCampeonatoByJogadorId = async (jogadorId) => {
     return await EstatisticaJogadorCampeonato.findOne({ jogadorId: jogadorId }, '-__v')
 }
 
+exports.getAllEstatisticasJogadoresPunidos = async () => {
+    return await EstatisticaJogadorCampeonato.find({ punicao: { $ne: null } })
+}
+
 exports.deleteEstatisticaJogadorCampeonatoById = async (id) => {
     return await EstatisticaJogadorCampeonato.deleteOne({ _id: id })
 }

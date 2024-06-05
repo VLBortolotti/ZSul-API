@@ -4,6 +4,9 @@ const estatisticaJogadorData  = require('../data/estatisticaJogadorData')
 const EstatisticaJogadorCampeonatoModel = require('../models/EstatisticaJogadorCampeonatoModel')
 const estatisticaJogadorCampeonatoData  = require('../data/estatisticaJogadorCampeonatoData')
 
+const EstatisticaJogadorModel = require('../models/EstatisticaJogadorModel')
+const estatisticaJogadorData  = require('../data/estatisticaJogadorData')
+
 const campeonatoData = require('../data/campeonatoData')
 const jogosData  = require('../data/jogosData')
 const usersData  = require('../data/usersData')
@@ -275,7 +278,6 @@ exports.updateEstatisticaJogadorCampeonatoById = async (field, value, campeonato
             const campeonatoName = campeonato.name
             const jogadorName    = jogador.name
             
-
             if (field == 'punicao') {
                 const response = await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, teamId, teamName, jogadorId, jogadorName, '0', '0', '0', value)
 
