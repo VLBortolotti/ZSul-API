@@ -39,6 +39,10 @@ const staffSchema = mongoose.Schema(
             type: String,
             default: "Staff"
         },
+        punicao: {
+            type: String,
+            default: ""
+        }
     }
 );
 

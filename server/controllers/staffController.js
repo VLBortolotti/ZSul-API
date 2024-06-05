@@ -30,6 +30,12 @@ exports.getStaffsByTeamId = async (req, res, next) => {
     response.sendResponse(res)
 }
 
+exports.getAllStaffPunidos = async (req, res, next) => {
+    const response = await staffService.getAllStaffPunidos()
+
+    response.sendResponse(res)
+}
+
 exports.updateStaffById = async (req, res, next) => {
     const { id }           = req.params
     const { field, value } = req.body

@@ -22,6 +22,10 @@ exports.getStaffsByTeamId = async (id) => {
     return await Staff.find({ teamId: id }, '-__v -password')
 }
 
+exports.getAllStaffPunidos = async () => {
+    return await Staff.find({ punicao: { $ne: "" } })
+}
+
 exports.deleteStaffById = async (id) => {
     return await Staff.deleteOne({ _id: id })
 }

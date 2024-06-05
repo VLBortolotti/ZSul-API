@@ -106,6 +106,18 @@ exports.getStaffsByTeamId = async (id) => {
     }
 }
 
+exports.getAllStaffPunidos = async () => {
+    try {
+        const response = await staffData.getAllStaffPunidos()
+
+        return new ResponseDTO('Success', 200, 'ok', response)
+        
+    } catch (error) {
+        console.log(`Erro: ${error}`)
+        return new ResponseDTO('Error', 500, 'Erro no servidor')
+    }
+}
+
 exports.updateStaffById = async (id, field, value) => {
     try {
         if (!ObjectId.isValid(id)) {

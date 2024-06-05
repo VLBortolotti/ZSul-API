@@ -10,6 +10,7 @@ router.post('/', upload.single("file"), staffController.postStaff)
 router.get('/', staffController.getAllStaffs)
 router.get('/:id', staffController.getStaffById)
 router.get('/team/:id', staffController.getStaffsByTeamId)
+router.get('/punidos', staffController.getAllStaffPunidos)
 
 router.patch('/:id', staffController.updateStaffById)
 
