@@ -6,7 +6,18 @@ const helmet  = require('helmet')
 const app     = express()
 const PORT    = Number(process.env.PORT) || 3000
 
-app.use(cors())
+app.use(cors({
+    origin: "https://zsuldash.netlify.app/",
+    credentials: true,
+    methods: [GET, POST, PUT, DELETE, PATCH],
+    allowedHeaders: [
+        "Origin",
+        "Content-Type",
+        "Accept",
+        "Authorization",
+        "X-Request-With"
+    ]
+}))
 app.use(express.json())
 app.use(helmet())
 
