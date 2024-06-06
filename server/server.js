@@ -9,7 +9,7 @@ const PORT    = Number(process.env.PORT) || 3000
 app.use(cors({
     origin: "https://zsuldash.netlify.app/",
     credentials: true,
-    methods: [GET, POST, PUT, DELETE, PATCH],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: [
         "Origin",
         "Content-Type",
