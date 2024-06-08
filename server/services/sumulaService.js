@@ -143,23 +143,15 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
             if (sumulaActiveCount >= 30) {
                 const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, 'banco')
 
-                await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, '0', '0', '0', '')
-
                 return new ResponseDTO('Success', 200, 'ok', response)
             }
 
-            console.log(`Log:\ncampeonatoId: ${campeonatoId}\ncampeonatoName: ${campeonatoName}\nuserId: ${userId}\nuserName: ${userName}\nelencoId: ${elencoId}\nelencoName: ${elencoName}\nelencoDocumento:${elencoDocumento}\nstatus: ${status}`)
-
             const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, status)
         
-            await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, userId, userName, elencoId, elencoName, '0', '0', '0', '')
-            
             return new ResponseDTO('Success', 200, 'ok', response)
 
         } else if (status == "banco"){
             const response = await sumulaData.postSumula(campeonatoId, campeonatoName, userId, userName, elencoId, elencoName, elencoDocumento, status)
-
-            await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, userId, userName, elencoId, elencoName, '0', '0', '0', '')
 
             return new ResponseDTO('Success', 200, 'ok', response)
 

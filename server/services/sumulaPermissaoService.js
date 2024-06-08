@@ -39,8 +39,6 @@ exports.aprovarSumulaPermissaoById = async (id) => {
 
         await sumulaPermissaoData.deletarSumulaPermissaoById(id)
 
-        await estatisticaJogadorCampeonatoData.postEstatisticaJogadorCampeonato(campeonatoId, userId, userName, elencoId, elencoName, '0', '0', '0', '')
-
         return new ResponseDTO('Success', 200, 'ok', response)
 
     } catch (error) {
