@@ -11,6 +11,14 @@ const elencoPunicaoSchema = mongoose.Schema(
             type: String,
             required: true
         }, 
+        campeonatoId: {
+            type: mongoose.Types.ObjectId,
+            required: true
+        },
+        campeonatoName: {
+            type: String,
+            required: true
+        },
         elencoId: {
             type: mongoose.Types.ObjectId,
             required: true
@@ -25,7 +33,6 @@ const elencoPunicaoSchema = mongoose.Schema(
         },
         descricao: {
             type: String,
-            required: false,
             default: ''
         }
     }
