@@ -127,7 +127,7 @@ exports.postSumula = async (campeonatoId, userId, elencoId, status) => {
 
         // Categoria do atleta acima da categoria do campeonato
         // entao, cadastrar elenco na SumulaPermissaoModel
-        if (elencoCategoria > campeonatoCategoria) {
+        if (parseFloat(elencoCategoria) > parseFloat(campeonatoCategoria)) {
             const response = await sumulaPermissaoData.postSumulaPermissao(campeonatoId, campeonatoCategoria, campeonatoName, userId, userName, elencoId, elencoCategoria, elencoName, elencoDocumento, 'banco')
 
             return new ResponseDTO('Success', 299, 'ok', response)
